@@ -1,15 +1,32 @@
 package com.cognixia.application.controller;
 
-<<<<<<< HEAD
-import org.springframework.stereotype.Controller;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+import com.cognixia.application.model.Account;
+import com.cognixia.application.model.Transaction;
+import com.cognixia.application.model.User;
+import com.cognixia.application.repository.AccountRepository;
+import com.cognixia.application.repository.TransactionRepository;
+import com.cognixia.application.repository.UserRepository;
+
+@RestController
+@RequestMapping(path = "/bank")
 public class BankController {
 	
 	//autowired statements
 		//services, beans, repos
+	@Autowired
+	private UserRepository userRepo;
+	@Autowired
+	private AccountRepository accountRepo;
+	@Autowired
+	private TransactionRepository transactionRepo;
 	
 	//global variables if any
 	
@@ -139,33 +156,7 @@ public class BankController {
 		
 		//return strings in the form of JSX
 		return "fundTransferSuccess";
-=======
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.cognixia.application.model.Account;
-import com.cognixia.application.model.Transaction;
-import com.cognixia.application.model.User;
-import com.cognixia.application.repository.AccountRepository;
-import com.cognixia.application.repository.TransactionRepository;
-import com.cognixia.application.repository.UserRepository;
-
-@RestController
-@RequestMapping(path = "/bank")
-public class BankController {
-	
-	@Autowired
-	private UserRepository userRepo;
-	@Autowired
-	private AccountRepository accountRepo;
-	@Autowired
-	private TransactionRepository transactionRepo;
-	
+	}
 	@PostMapping(path="/user/add")
 	public @ResponseBody String addNewUser (@RequestParam String firstName,
 			@RequestParam String lastName, @RequestParam String address,
@@ -196,7 +187,6 @@ public class BankController {
 	@GetMapping(path = "/transaction/all")
 	public @ResponseBody Iterable<Transaction> getAllTransactions() {
 		return transactionRepo.findAll();
->>>>>>> a7e6be9217a15df94f81a75aa73ac9a7040f7561
 	}
-
+	
 }
