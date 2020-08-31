@@ -1,102 +1,102 @@
 package com.cognixia.application.controller;
 
-<<<<<<< HEAD
+/*//<<<<<<< HEAD
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class BankController {
-	
-	//autowired statements
-		//services, beans, repos
-	
-	//global variables if any
-	
-	//GETTING METHODS
-	
+
+	// autowired statements
+	// services, beans, repos
+
+	// global variables if any
+
+	// GETTING METHODS
+
 	@GetMapping("/mainPage")
 	public String showMainPage() {
-		
-		//page to display
+
+		// page to display
 		return "mainPage";
 	}
-	
+
 	@GetMapping("/deposit")
 	public String showDeposit() {
-		
-		//page to display
+
+		// page to display
 		return "deposit";
 	}
-	
+
 	@GetMapping("/withdraw")
 	public String showWithdraw() {
-		
-		//page to display
+
+		// page to display
 		return "withdraw";
 	}
-	
+
 	@GetMapping("/fundTransfer")
 	public String showFundTransfer() {
-		
-		//page to display
+
+		// page to display
 		return "fundTransfer";
 	}
-	
+
 	@GetMapping("/transactionHistory")
 	public String showHistory() {
-		
-		//page to display
+
+		// page to display
 		return "transactionHistory";
 	}
-	
+
 	@GetMapping("/myAccount")
 	public String showMyAccount() {
-		
-		//page to display
+
+		// page to display
 		return "myAccount";
 	}
-	
-	//POSTING METHODS
-	
+
+	// POSTING METHODS
+
 	@PostMapping("/deposit")
-	public String depositSuccess( /* ModelMap model, double amount */ ) {
-		
-		//create user instance
-			//User loggedUser = (User) model.getAttribute("user");
-		
-		//call deposit method
-			//OPTIONAL consider getting/setting UserBalance
-		
-		//push new balance to DB
-		
-		//create a timestamp and push to transaction history for user
-		
-		//OPTIONAL display success or redirect to main menu
-		//return strings in the form of JSX
-		return "depositSuccess"; //return front end page if deposit is updated successfully
+	public String depositSuccess(  ModelMap model, double amount  ) {
+
+		// create user instance
+		// User loggedUser = (User) model.getAttribute("user");
+
+		// call deposit method
+		// OPTIONAL consider getting/setting UserBalance
+
+		// push new balance to DB
+
+		// create a timestamp and push to transaction history for user
+
+		// OPTIONAL display success or redirect to main menu
+		// return strings in the form of JSX
+		return "depositSuccess"; // return front end page if deposit is updated successfully
 	}
-	
+
 	@PostMapping("/withdraw")
-	public String withdrawSuccess(/* ModelMap model, double amount */) {
-		
-		//create user instance
-			//User loggedUser = (User) model.getAttribute("user");
-		
-		//call withdraw method
-			//OPTIONAL consider getting/setting UserBalance
-		
-		//push new balance to DB as an UPDATE to user
-		
-		//create a timestamp and push to transaction history for user
-		
-		//OPTIONAL display success or redirect to main menu
-		//return strings in the form of JSX
-		return "depositSuccess"; //return front end page if deposit is updated successfully
-	}
-	
-	@PostMapping
-	public String fundTransferSuccess( /* ModelMap model, int receiverId, double amount */ ) {
+	public String withdrawSuccess( ModelMap model, double amount ) {
+
+		// create user instance
+		// User loggedUser = (User) model.getAttribute("user");
+
+		// call withdraw method
+		// OPTIONAL consider getting/setting UserBalance
+
+		// push new balance to DB as an UPDATE to user
+
+		// create a timestamp and push to transaction history for user
+
+		// OPTIONAL display success or redirect to main menu
+		// return strings in the form of JSX
+		return "depositSuccess"; // return front end page if deposit is updated successfully
+}
+
+@PostMapping()
+	public String fundTransferSuccess(  ModelMap model, int receiverId, double amount  ) {
 		
 		//2 WAYS TO DO THIS
 		//1. do a separate deposit and withdraw method for the respective user
@@ -138,8 +138,7 @@ public class BankController {
 			//return page to end
 		
 		//return strings in the form of JSX
-		return "fundTransferSuccess";
-=======
+		return "fundTransferSuccess";*/
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -158,20 +157,19 @@ import com.cognixia.application.repository.UserRepository;
 @RestController
 @RequestMapping(path = "/bank")
 public class BankController {
-	
+
 	@Autowired
 	private UserRepository userRepo;
 	@Autowired
 	private AccountRepository accountRepo;
 	@Autowired
 	private TransactionRepository transactionRepo;
-	
-	@PostMapping(path="/user/add")
-	public @ResponseBody String addNewUser (@RequestParam String firstName,
-			@RequestParam String lastName, @RequestParam String address,
-			@RequestParam String contactNum, @RequestParam String password,
+
+	@PostMapping(path = "/user/add")
+	public @ResponseBody String addNewUser(@RequestParam String firstName, @RequestParam String lastName,
+			@RequestParam String address, @RequestParam String contactNum, @RequestParam String password,
 			@RequestParam float initialDeposit) {
-		
+
 		User n = new User();
 		n.setFirstName(firstName);
 		n.setLastName(lastName);
@@ -182,21 +180,21 @@ public class BankController {
 		userRepo.save(n);
 		return "Saved";
 	}
-	
+
 	@GetMapping(path = "/user/all")
 	public @ResponseBody Iterable<User> getAllUsers() {
 		return userRepo.findAll();
 	}
-	
+
 	@GetMapping(path = "/account/all")
 	public @ResponseBody Iterable<Account> getAllAccounts() {
 		return accountRepo.findAll();
 	}
-	
+
 	@GetMapping(path = "/transaction/all")
 	public @ResponseBody Iterable<Transaction> getAllTransactions() {
 		return transactionRepo.findAll();
->>>>>>> a7e6be9217a15df94f81a75aa73ac9a7040f7561
+//>>>>>>> a7e6be9217a15df94f81a75aa73ac9a7040f7561
 	}
 
 }
