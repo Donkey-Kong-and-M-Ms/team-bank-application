@@ -10,16 +10,16 @@ import javax.persistence.Id;
 public class Account {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "account_id")
 	private Integer accountId;
-	
+
 	@Column(name = "user_id")
 	private Integer userId;
-	
+
 	@Column(name = "account_type")
 	private String accountType;
-	
+
 	@Column(name = "account_value")
 	private float balance;
 
@@ -54,9 +54,7 @@ public class Account {
 	public void setBalance(float balance) {
 		this.balance = balance;
 	}
-	
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> a7e6be9217a15df94f81a75aa73ac9a7040f7561
+/*
+ * <<<<<<< HEAD } ======= } >>>>>>> a7e6be9217a15df94f81a75aa73ac9a7040f7561
+ */

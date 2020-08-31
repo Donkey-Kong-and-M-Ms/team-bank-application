@@ -132,10 +132,8 @@ public class User {
 	public void setTransactionList(List transactionList) {
 		this.transactionList = transactionList;
 	}
-	
-	
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> a7e6be9217a15df94f81a75aa73ac9a7040f7561
+	
+	/*
+	 * <<<<<<< HEAD } ======= } >>>>>>> a7e6be9217a15df94f81a75aa73ac9a7040f7561
+	 */

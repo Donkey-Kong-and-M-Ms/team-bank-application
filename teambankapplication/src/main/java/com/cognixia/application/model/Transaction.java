@@ -43,9 +43,6 @@ public class Transaction {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
-<<<<<<< HEAD
-}
-=======
-}
->>>>>>> a7e6be9217a15df94f81a75aa73ac9a7040f7561
+}/*
+	 * <<<<<<< HEAD } ======= } >>>>>>> a7e6be9217a15df94f81a75aa73ac9a7040f7561
+	 */
