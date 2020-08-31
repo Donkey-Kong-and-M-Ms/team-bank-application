@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Account {
@@ -14,8 +15,11 @@ public class Account {
 	@Column(name = "account_id")
 	private Integer accountId;
 	
-	@Column(name = "user_id")
-	private Integer userId;
+//	@Column(name = "user_id")
+//	private Integer userId;
+	
+	@ManyToOne(targetEntity = User.class)
+	private User user;
 	
 	@Column(name = "account_type")
 	private String accountType;
@@ -32,11 +36,11 @@ public class Account {
 	}
 
 	public Integer getUserId() {
-		return userId;
+		return user.getUserId();
 	}
 
 	public void setUserId(Integer userId) {
-		this.userId = userId;
+		this.user.setUserId(userId);
 	}
 
 	public String getAccountType() {
@@ -54,5 +58,13 @@ public class Account {
 	public void setBalance(float balance) {
 		this.balance = balance;
 	}
-	
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 }

@@ -35,15 +35,11 @@ public class User {
 	@Column(name = "initial_deposit")
 	private float initialDeposit;
 	
-	@OneToMany(targetEntity = Account.class)
-	private List accountList;
-	
-	@OneToMany(targetEntity = Transaction.class)
-	private List transactionList;
+//	@OneToMany(targetEntity = Account.class)
+//	private List accountList;
 //	
-//	private List<Account> accounts;
-//	
-//	private List<Transaction> transactions;
+//	@OneToMany(targetEntity = Transaction.class)
+//	private List transactionList;
 
 	public Integer getUserId() {
 		return userId;
@@ -100,37 +96,21 @@ public class User {
 	public void setInitialDeposit(float initialDeposit) {
 		this.initialDeposit = initialDeposit;
 	}
-//
-//	public List<Account> getAccounts() {
-//		return accounts;
+
+//	public List getAccountList() {
+//		return accountList;
 //	}
 //
-//	public void setAccounts(List<Account> accounts) {
-//		this.accounts = accounts;
+//	public void setAccountList(List accountList) {
+//		this.accountList = accountList;
 //	}
 //
-//	public List<Transaction> getTransactions() {
-//		return transactions;
+//	public List getTransactionList() {
+//		return transactionList;
 //	}
 //
-//	public void setTransactions(List<Transaction> transactions) {
-//		this.transactions = transactions;
+//	public void setTransactionList(List transactionList) {
+//		this.transactionList = transactionList;
 //	}
-
-	public List getAccountList() {
-		return accountList;
-	}
-
-	public void setAccountList(List accountList) {
-		this.accountList = accountList;
-	}
-
-	public List getTransactionList() {
-		return transactionList;
-	}
-
-	public void setTransactionList(List transactionList) {
-		this.transactionList = transactionList;
-	}
 	
 }
