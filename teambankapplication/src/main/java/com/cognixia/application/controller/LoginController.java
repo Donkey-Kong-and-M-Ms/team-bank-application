@@ -3,18 +3,20 @@ package com.cognixia.application.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.cognixia.application.repository.AccountRepository;
 import com.cognixia.application.repository.UserRepository;
 import com.cognixia.application.model.*;
 
-@Controller
+@RestController
+@RequestMapping(path = "/login") //may need to rename this or the login functions below
 public class LoginController {
 
 	// autowired statements
@@ -47,6 +49,7 @@ public class LoginController {
 
 	// POSTING METHODS
 
+	//may not use models for logging but httpSessions?
 	@PostMapping("/login")
 	public @ResponseBody String loginSuccess(ModelMap model, @RequestParam int userId, @RequestParam String userPass) {
 

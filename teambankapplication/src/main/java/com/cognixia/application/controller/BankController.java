@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
 import com.cognixia.application.model.Account;
 import com.cognixia.application.model.Transaction;
@@ -17,6 +18,8 @@ import com.cognixia.application.model.User;
 import com.cognixia.application.repository.AccountRepository;
 import com.cognixia.application.repository.TransactionRepository;
 import com.cognixia.application.repository.UserRepository;
+import com.cognixia.application.service.BankService;
+import com.cognixia.application.dao.AccountDaoImpl;
 
 @RestController
 @RequestMapping(path = "/bank")
@@ -28,6 +31,15 @@ public class BankController {
 	private AccountRepository accountRepo;
 	@Autowired
 	private TransactionRepository transactionRepo;
+	@Autowired
+	BankService bank;
+	@Autowired
+	AccountDaoImpl accDaoImpl;
+	@Autowired
+	Account account;
+
+	// GLOBAL VARIABLES
+	float userBalance;
 
 	// GETTING METHODS
 
@@ -108,15 +120,25 @@ public class BankController {
 	// POSTING METHODS
 
 	@PostMapping("/deposit")
-	public String depositSuccess(ModelMap model, double amount) {
+	public String depositSuccess(ModelMap model, float amount) {
 
 		// create user instance that we can work with
-		// User loggedUser = (User) model.getAttribute("user");
+		User loggedUser = (User) model.getAttribute("user");
 
-		// call deposit method
-		// OPTIONAL consider getting/setting UserBalance
+		// using the user object to get a user id
+		int userId = loggedUser.getUserId();
+
+		// using the user id to connect to an account id (to be used for transactions)
+		int accId = accDaoImpl.getAccountIdByUserId(userId);
+
+		// sets up a local var balance to mock the balance in the account
+		userBalance = accDaoImpl.getBalanceByAccountId(accId);
+
+		// deposits amount
+		userBalance = bank.deposit(userBalance, amount);
 
 		// push new balance to DB
+		accDaoImpl.updateBalance(userBalance, accId);
 
 		// create a timestamp and push to transaction history for user
 
@@ -126,15 +148,25 @@ public class BankController {
 	}
 
 	@PostMapping("/withdraw")
-	public String withdrawSuccess(ModelMap model, double amount) {
+	public String withdrawSuccess(ModelMap model, float amount) {
 
-		// create user instance
-		// User loggedUser = (User) model.getAttribute("user");
+		// create user instance that we can work with
+		User loggedUser = (User) model.getAttribute("user");
 
-		// call withdraw method
-		// OPTIONAL consider getting/setting UserBalance
+		// using the user object to get a user id
+		int userId = loggedUser.getUserId();
 
-		// push new balance to DB as an UPDATE to user
+		// using the user id to connect to an account id (to be used for transactions)
+		int accId = accDaoImpl.getAccountIdByUserId(userId);
+
+		// sets up a local var balance to mock the balance in the account
+		userBalance = accDaoImpl.getBalanceByAccountId(accId);
+
+		// deposits amount
+		userBalance = bank.withdraw(userBalance, amount);
+
+		// push new balance to DB
+		accDaoImpl.updateBalance(userBalance, accId);
 
 		// create a timestamp and push to transaction history for user
 
