@@ -69,5 +69,13 @@ public class Account {
 		newUser.setUserId(userId);
 		this.user = newUser;
 	}
+	
+	public void deposit(float deposit) {
+		this.balance += deposit;
+	}
+	
+	public void withdraw(float withdraw) {
+		this.balance -= withdraw;
+	}
 
 }
