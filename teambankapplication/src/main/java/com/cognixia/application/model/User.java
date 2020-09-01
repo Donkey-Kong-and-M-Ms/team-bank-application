@@ -1,19 +1,16 @@
 package com.cognixia.application.model;
 
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 
 @Entity
 public class User {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "user_id")
 	private Integer userId;
 	
@@ -34,12 +31,6 @@ public class User {
 
 	@Column(name = "initial_deposit")
 	private float initialDeposit;
-	
-//	@OneToMany(targetEntity = Account.class)
-//	private List accountList;
-//	
-//	@OneToMany(targetEntity = Transaction.class)
-//	private List transactionList;
 
 	public Integer getUserId() {
 		return userId;
@@ -96,21 +87,5 @@ public class User {
 	public void setInitialDeposit(float initialDeposit) {
 		this.initialDeposit = initialDeposit;
 	}
-
-//	public List getAccountList() {
-//		return accountList;
-//	}
-//
-//	public void setAccountList(List accountList) {
-//		this.accountList = accountList;
-//	}
-//
-//	public List getTransactionList() {
-//		return transactionList;
-//	}
-//
-//	public void setTransactionList(List transactionList) {
-//		this.transactionList = transactionList;
-//	}
 	
 }

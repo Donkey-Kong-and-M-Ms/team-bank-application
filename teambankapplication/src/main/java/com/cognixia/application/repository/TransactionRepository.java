@@ -5,6 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.cognixia.application.model.Transaction;
 
-public interface TransactionRepository extends CrudRepository<Transaction, Integer> {
+public interface TransactionRepository extends JpaRepository<Transaction, Integer> {
 
 }

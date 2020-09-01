@@ -1,7 +1,12 @@
 package com.cognixia.application.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -157,21 +162,22 @@ public class BankController {
 		//return strings in the form of JSX
 		return "fundTransferSuccess";
 	}
+	
 	@PostMapping(path="/user/add")
 	public @ResponseBody String addNewUser (@RequestParam String firstName,
 			@RequestParam String lastName, @RequestParam String address,
 			@RequestParam String contactNum, @RequestParam String password,
 			@RequestParam float initialDeposit) {
 		
-		User n = new User();
-		n.setFirstName(firstName);
-		n.setLastName(lastName);
-		n.setAddress(address);
-		n.setContactNum(contactNum);
-		n.setPassword(password);
-		n.setInitialDeposit(initialDeposit);
-		userRepo.save(n);
-		return "Saved";
+		User newUser = new User();
+		newUser.setFirstName(firstName);
+		newUser.setLastName(lastName);
+		newUser.setAddress(address);
+		newUser.setContactNum(contactNum);
+		newUser.setPassword(password);
+		newUser.setInitialDeposit(initialDeposit);
+		userRepo.save(newUser);
+		return "Saved User";
 	}
 	
 	@GetMapping(path = "/user/all")
@@ -179,14 +185,78 @@ public class BankController {
 		return userRepo.findAll();
 	}
 	
+	@GetMapping(path = "/user/{userid}")
+	public @ResponseBody Optional<User> getUserByID(@PathVariable Integer userid) {
+		return userRepo.findById(userid);
+	}
+	
+	@PostMapping(path="/account/add")
+	public @ResponseBody String addNewAccount (@RequestParam int userId, 
+			@RequestParam String accountType, @RequestParam float balance) {
+		
+		Account newAccount = new Account();
+		newAccount.setUser(userId);
+		newAccount.setAccountType(accountType);
+		newAccount.setBalance(balance);
+		accountRepo.save(newAccount);
+		return "Saved Account";
+	}
+	
 	@GetMapping(path = "/account/all")
 	public @ResponseBody Iterable<Account> getAllAccounts() {
 		return accountRepo.findAll();
 	}
 	
+	@GetMapping(path = "/account/all/{userid}")
+	public @ResponseBody List<Account> getAllAccountsByUserID(@PathVariable Integer userid) {
+		Iterable<Account> allAccounts = accountRepo.findAll();
+		List<Account> accountsByUserId = new ArrayList<Account>();
+		for(Account a: allAccounts) {
+			if(a.getUserId().equals(userid)) {
+				accountsByUserId.add(a);
+			}
+		}
+		
+		return accountsByUserId;
+	}
+	
+	@GetMapping(path = "/account/{accountid}")
+	public @ResponseBody Optional<Account> getAccountByID(@PathVariable Integer accountid) {
+		return accountRepo.findById(accountid);
+	}
+	
+	@PostMapping(path="/transaction/add")
+	public @ResponseBody String addNewTransaction (@RequestParam int userId, 
+			@RequestParam String description) {
+		
+		Transaction newTransaction = new Transaction();
+		newTransaction.setUser(userId);
+		newTransaction.setDescription(description);
+		transactionRepo.save(newTransaction);
+		return "Saved Transaction";
+	}
+	
 	@GetMapping(path = "/transaction/all")
 	public @ResponseBody Iterable<Transaction> getAllTransactions() {
 		return transactionRepo.findAll();
+	}
+	
+	@GetMapping(path = "/transaction/all/{userid}")
+	public @ResponseBody List<Transaction> getAllTransactionsByUserID(@PathVariable Integer userid) {
+		Iterable<Transaction> allTransactions = transactionRepo.findAll();
+		List<Transaction> transactionsByUserId = new ArrayList<Transaction>();
+		for(Transaction t: allTransactions) {
+			if(t.getUserId().equals(userid)) {
+				transactionsByUserId.add(t);
+			}
+		}
+		
+		return transactionsByUserId;
+	}
+	
+	@GetMapping(path = "/transaction/{transactionid}")
+	public @ResponseBody Optional<Transaction> getTransactionByID(@PathVariable Integer transactionid) {
+		return transactionRepo.findById(transactionid);
 	}
 	
 }

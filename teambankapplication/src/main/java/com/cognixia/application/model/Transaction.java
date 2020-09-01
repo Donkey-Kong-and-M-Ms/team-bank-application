@@ -11,20 +11,15 @@ import javax.persistence.ManyToOne;
 public class Transaction {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "transaction_id")
 	private Integer transactionId;
-	
-//	@Column(name = "user_id")
-//	private Integer userId;
 	
 	@ManyToOne(targetEntity = User.class)
 	private User user;
 	
 	@Column(name = "transaction_description")
 	private String description;
-	
-
 
 	public Integer getTransactionId() {
 		return transactionId;
@@ -56,6 +51,12 @@ public class Transaction {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+	
+	public void setUser(int userId) {
+		User newUser = new User();
+		newUser.setUserId(userId);
+		this.user = newUser;
 	}
 
 }
