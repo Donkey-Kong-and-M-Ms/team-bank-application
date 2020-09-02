@@ -19,6 +19,9 @@ import com.cognixia.application.model.User;
 import com.cognixia.application.repository.AccountRepository;
 import com.cognixia.application.repository.TransactionRepository;
 import com.cognixia.application.repository.UserRepository;
+import com.cognixia.application.utility.ErrorUtil;
+import com.cognixia.application.utility.InputValidationUtil;
+import com.cognixia.application.utility.TransactionUtil;
 
 @RestController
 @RequestMapping(path = "/bank")
@@ -164,6 +167,22 @@ public class BankController {
 	}
 	
 	// Add new user
+	@PostMapping(path="/register")
+	public @ResponseBody String registerUser (@RequestParam String firstName,
+			@RequestParam String lastName, @RequestParam String address,
+			@RequestParam String contactNum, @RequestParam String password,
+			@RequestParam float initialDeposit, @RequestParam String accountType) {
+		addNewUser(firstName, lastName, address, contactNum, password, initialDeposit);
+		
+		Integer userId = userRepo.getOne((int) userRepo.count()).getUserId();
+		
+		addNewAccount(userId, accountType, initialDeposit);
+		addNewTransaction(userId, TransactionUtil.register(initialDeposit, firstName + " " + lastName));
+		
+		return "Registered User";
+	}
+	
+	// Add new user
 	@PostMapping(path="/user/add")
 	public @ResponseBody String addNewUser (@RequestParam String firstName,
 			@RequestParam String lastName, @RequestParam String address,
@@ -219,21 +238,29 @@ public class BankController {
 	@PostMapping(path = "/account/{accountid}/deposit")
 	public @ResponseBody String depositToAccount(@PathVariable Integer accountid, @RequestParam float deposit) {
 		Account accountToUpdate = accountRepo.getOne(accountid);
-		accountToUpdate.deposit(deposit);
-		accountRepo.save(accountToUpdate);
-		return "Deposit successful, new balance: " + accountToUpdate.getBalance();
+		if(InputValidationUtil.positiveNumber(deposit)) {
+			accountToUpdate.deposit(deposit);
+			accountRepo.save(accountToUpdate);
+			return "Deposit successful, new balance: " + accountToUpdate.getBalance();
+		} else {
+			return ErrorUtil.errorNotPositive();
+		}
 	}
 	
 	// Withdraw from account
 	@PostMapping(path = "/account/{accountid}/withdraw")
 	public @ResponseBody String withdrawFromAccount(@PathVariable Integer accountid, @RequestParam float withdraw) {
 		Account accountToUpdate = accountRepo.getOne(accountid);
-		if(withdraw < accountToUpdate.getBalance()) {
-			accountToUpdate.withdraw(withdraw);
-			accountRepo.save(accountToUpdate);
-			return "Withdraw successful, new balance: " + accountToUpdate.getBalance();
+		if(InputValidationUtil.positiveNumber(withdraw)) {
+			if(InputValidationUtil.sufficientFunds(withdraw, accountToUpdate)) {
+				accountToUpdate.withdraw(withdraw);
+				accountRepo.save(accountToUpdate);
+				return "Withdraw successful, new balance: " + accountToUpdate.getBalance();
+			} else {
+				return ErrorUtil.errorNotEnough();
+			}
 		} else {
-			return "Withdraw failed: not enough in balance";
+			return ErrorUtil.errorNotPositive();
 		}
 	}
 	
@@ -243,13 +270,35 @@ public class BankController {
 			@RequestParam Integer transferAccountid, @RequestParam float transfer) {
 		Account accountToUpdate = accountRepo.getOne(accountid);
 		Account otherAccount = accountRepo.getOne(transferAccountid);
-		if(transfer < accountToUpdate.getBalance()) {
+		
+		boolean noErrorNumber = false;
+		boolean noErrorUser = false;
+		
+		String errorMessage = "";
+		
+		if(InputValidationUtil.userExists(transferAccountid, userRepo)) {
+			noErrorUser = true;
+		} else {
+			errorMessage += ErrorUtil.errorUserNotFound() + ", ";
+		}
+		
+		if(InputValidationUtil.positiveNumber(transfer)) {
+			if(InputValidationUtil.sufficientFunds(transfer, accountToUpdate)) {
+				noErrorNumber = true;
+			} else {
+				errorMessage += ErrorUtil.errorNotEnough();
+			}
+		} else {
+			errorMessage += ErrorUtil.errorNotPositive();
+		}
+		
+		if(noErrorUser && noErrorNumber) {
 			accountToUpdate.withdraw(transfer);
 			otherAccount.deposit(transfer);
 			accountRepo.save(accountToUpdate);
 			return "Transfer successful, new balance: " + accountToUpdate.getBalance();
 		} else {
-			return "Transfer failed: not enough in balance";
+			return errorMessage;
 		}
 	}
 	
