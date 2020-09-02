@@ -9,41 +9,37 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-@Entity(name="DBUser")
+@Entity(name = "DBUser")
 public class User {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "user_id")
 	private Integer userId;
-	
+
 	@Column(name = "first_name")
 	private String firstName;
-	
+
 	@Column(name = "last_name")
 	private String lastName;
-	
+
 	@Column(name = "address")
 	private String address;
-	
+
 	@Column(name = "contact_number")
 	private String contactNum;
-	
+
 	@Column(name = "user_password")
 	private String password;
 
 	@Column(name = "initial_deposit")
 	private float initialDeposit;
-	
+
 	@OneToMany(targetEntity = Account.class)
 	private List accountList;
-	
+
 	@OneToMany(targetEntity = Transaction.class)
 	private List transactionList;
-//	
-//	private List<Account> accounts;
-//	
-//	private List<Transaction> transactions;
 
 	public Integer getUserId() {
 		return userId;
@@ -100,22 +96,6 @@ public class User {
 	public void setInitialDeposit(float initialDeposit) {
 		this.initialDeposit = initialDeposit;
 	}
-//
-//	public List<Account> getAccounts() {
-//		return accounts;
-//	}
-//
-//	public void setAccounts(List<Account> accounts) {
-//		this.accounts = accounts;
-//	}
-//
-//	public List<Transaction> getTransactions() {
-//		return transactions;
-//	}
-//
-//	public void setTransactions(List<Transaction> transactions) {
-//		this.transactions = transactions;
-//	}
 
 	public List getAccountList() {
 		return accountList;
@@ -132,8 +112,21 @@ public class User {
 	public void setTransactionList(List transactionList) {
 		this.transactionList = transactionList;
 	}
+
+	public User(Integer userId, String firstName, String lastName, String address, String contactNum, String password,
+			float initialDeposit) {
+		super();
+		this.userId = userId;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.address = address;
+		this.contactNum = contactNum;
+		this.password = password;
+		this.initialDeposit = initialDeposit;
+	}
+
+	public User() {
+		super();
+	}
+
 }
-	
-	/*
-	 * <<<<<<< HEAD } ======= } >>>>>>> a7e6be9217a15df94f81a75aa73ac9a7040f7561
-	 */

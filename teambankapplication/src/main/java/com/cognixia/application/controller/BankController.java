@@ -1,7 +1,5 @@
 package com.cognixia.application.controller;
 
-/*//<<<<<<< HEAD
-	*/
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.List;
 
 import com.cognixia.application.model.Account;
 import com.cognixia.application.model.Transaction;
@@ -20,6 +17,7 @@ import com.cognixia.application.repository.TransactionRepository;
 import com.cognixia.application.repository.UserRepository;
 import com.cognixia.application.service.BankService;
 import com.cognixia.application.dao.AccountDaoImpl;
+import com.cognixia.application.dao.UserDaoImpl;
 
 @RestController
 @RequestMapping(path = "/bank")
@@ -37,6 +35,8 @@ public class BankController {
 	AccountDaoImpl accDaoImpl;
 	@Autowired
 	Account account;
+	@Autowired
+	UserDaoImpl userDaoImpl;
 
 	// GLOBAL VARIABLES
 	float userBalance;
@@ -114,7 +114,6 @@ public class BankController {
 	@GetMapping(path = "/transaction/all")
 	public @ResponseBody Iterable<Transaction> getAllTransactions() {
 		return transactionRepo.findAll();
-//>>>>>>> a7e6be9217a15df94f81a75aa73ac9a7040f7561
 	}
 
 	// POSTING METHODS
@@ -141,8 +140,8 @@ public class BankController {
 		accDaoImpl.updateBalance(userBalance, accId);
 
 		// create a timestamp and push to transaction history for user
+		transactionRepo.save(new Transaction(0, userId, "Deposit of " + amount));
 
-		// OPTIONAL display success or redirect to main menu
 		// return strings in the form of JSX
 		return "depositSuccess"; // return front end page if deposit is updated successfully
 	}
@@ -169,53 +168,43 @@ public class BankController {
 		accDaoImpl.updateBalance(userBalance, accId);
 
 		// create a timestamp and push to transaction history for user
+		transactionRepo.save(new Transaction(0, userId, "Withdraw of " + amount));
 
-		// OPTIONAL display success or redirect to main menu
 		// return strings in the form of JSX
 		return "depositSuccess"; // return front end page if deposit is updated successfully
 	}
 
 	@PostMapping()
-	public String fundTransferSuccess(ModelMap model, int receiverId, double amount) {
+	public String fundTransferSuccess(ModelMap model, int receiverId, float amount) {
 
-		// 2 WAYS TO DO THIS
-		// 1. do a separate deposit and withdraw method for the respective user
+		// create user instance that we can work with
+		User loggedUser = (User) model.getAttribute("user");
+		
+		//this receiving user is not needed since methods executed below grab the balance directly
+		//User recUser = userDaoImpl.findUserById(receiverId);
 
-		// create 2 objects - 1 loggedUser, 1 receivingUser
-		// User loggedUser = (User) model.getAttribute("user");
-		// User receivingUser = daoimpl.findByUserId(receiverId)
+		// using the user object to get a user id
+		int userId = loggedUser.getUserId();
 
-		// OPTIONAL get loggeduser balance
-		// withdraw entered amount from main user
-		// set balance to the loggeduser
+		// using the user id to connect to an account id (to be used for transactions)
+		int accId = accDaoImpl.getAccountIdByUserId(userId);
+		int recAccId = accDaoImpl.getAccountIdByUserId(receiverId);
 
-		// OPTIONAL get recuser balance
-		// deposit where userID=?
-		// set balance to the recuser
+		// sets up a local var balance to mock the balance in the account
+		userBalance = accDaoImpl.getBalanceByAccountId(accId);
+		float recBalance = accDaoImpl.getBalanceByAccountId(recAccId);
 
-		// save new balances to the DB
+		// deposits amount
+		recBalance = bank.deposit(recBalance, amount);
+		userBalance = bank.withdraw(userBalance, amount);
 
-		// save to transaction histories
+		// push new balance to DB
+		accDaoImpl.updateBalance(userBalance, accId);
+		accDaoImpl.updateBalance(recBalance, recAccId);
 
-		// return page to end
-
-		// --------------------------------------------------
-
-		// 2. use a fundtransfer method
-
-		// create 2 objects - 1 loggedUser, 1 receivingUser
-		// User loggedUser = (User) model.getAttribute("user");
-		// User receivingUser = daoimpl.findByUserId(receiverId)
-
-		// OPTIONAL getboth balance
-
-		// use a fundtransfer method (which should have depo and draw method embedded)
-
-		// save new balances to the DB
-
-		// save to transaction histories
-
-		// return page to end
+		// create a transaction object as a psuedo-timestamp to push to the DB
+		bank.addHistory(userId, "Transferred to " + receiverId);
+		bank.addHistory(receiverId, "Transferred from " + userId);
 
 		// return strings in the form of JSX
 		return "fundTransferSuccess";

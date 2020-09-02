@@ -6,17 +6,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-@Entity(name="DBTransaction")
+@Entity(name = "DBTransaction")
 public class Transaction {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "transaction_id")
 	private Integer transactionId;
-	
+
 	@Column(name = "user_id")
 	private Integer userId;
-	
+
 	@Column(name = "transaction_description")
 	private String description;
 
@@ -43,6 +43,16 @@ public class Transaction {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-}/*
-	 * <<<<<<< HEAD } ======= } >>>>>>> a7e6be9217a15df94f81a75aa73ac9a7040f7561
-	 */
+
+	public Transaction(Integer transactionId, Integer userId, String description) {
+		super();
+		this.transactionId = transactionId;
+		this.userId = userId;
+		this.description = description;
+	}
+
+	public Transaction() {
+		super();
+	}
+
+}

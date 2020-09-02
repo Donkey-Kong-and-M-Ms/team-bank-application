@@ -1,7 +1,5 @@
 package com.cognixia.application.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,21 +9,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cognixia.application.repository.AccountRepository;
-import com.cognixia.application.repository.UserRepository;
-import com.cognixia.application.model.*;
+import com.cognixia.application.service.LoginService;
 
 @RestController
-@RequestMapping(path = "/login") //may need to rename this or the login functions below
+@RequestMapping(path = "/login") // may need to rename this or the login functions below
 public class LoginController {
-
-	// autowired statements
-
 	@Autowired
-	private UserRepository userRepo;
-
-	@Autowired
-	private AccountRepository accountRepo;
+	LoginService lService;
 
 	// global variables if any
 
@@ -49,18 +39,14 @@ public class LoginController {
 
 	// POSTING METHODS
 
-	//may not use models for logging but httpSessions?
+	// may not use models for logging but httpSessions?
 	@PostMapping("/login")
 	public @ResponseBody String loginSuccess(ModelMap model, @RequestParam int userId, @RequestParam String userPass) {
 
-		List<User> uList = (List<User>) userRepo.findAll();
-
-		// the user id can/should be changed with username
-		for (User user : uList) {
-			if (user.getPassword().equals(userPass) && user.getUserId().equals(userId)) {
-				// places the correct user in the model
-				model.put("user", user);
-			}
+		// THIS IS A WARNING MESSAGE IF THE LOGIN FAILED
+		// model is updated in the login service
+		if (!lService.loginVerify(model, userId, userPass)) {
+			return "loginFail";
 		}
 
 		return "loginSuccess";
