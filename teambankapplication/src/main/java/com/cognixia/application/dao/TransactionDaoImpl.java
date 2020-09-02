@@ -1,12 +1,14 @@
 package com.cognixia.application.dao;
 
+import org.springframework.stereotype.Component;
+
 /*import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import com.cognixia.application.model.Transaction;*/
-
+@Component
 public class TransactionDaoImpl implements TransactionDao{
 	
 	//SINCE TRANSACTIONS ARE SIMPLE, NO NEED TO WRITE OUT MUCH

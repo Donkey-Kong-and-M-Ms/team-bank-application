@@ -6,7 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-@Entity(name="DBAccount")
+@Entity(name = "DBAccount")
 public class Account {
 
 	@Id
@@ -54,7 +54,11 @@ public class Account {
 	public void setBalance(float balance) {
 		this.balance = balance;
 	}
+
+	@Override
+	public String toString() {
+		return "Account [accountId=" + accountId + ", userId=" + userId + ", accountType=" + accountType + ", balance="
+				+ balance + "]";
+	}
+	
 }
-/*
- * <<<<<<< HEAD } ======= } >>>>>>> a7e6be9217a15df94f81a75aa73ac9a7040f7561
- */

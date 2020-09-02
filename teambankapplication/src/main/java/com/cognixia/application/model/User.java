@@ -129,4 +129,10 @@ public class User {
 		super();
 	}
 
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", address=" + address
+				+ ", contactNum=" + contactNum + ", password=" + password + ", initialDeposit=" + initialDeposit + "]";
+	}
+
 }

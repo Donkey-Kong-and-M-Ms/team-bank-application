@@ -55,4 +55,10 @@ public class Transaction {
 		super();
 	}
 
+	@Override
+	public String toString() {
+		return "Transaction [transactionId=" + transactionId + ", userId=" + userId + ", description=" + description
+				+ "]";
+	}
+
 }

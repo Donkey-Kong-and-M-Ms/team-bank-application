@@ -34,9 +34,7 @@ public class BankController {
 	@Autowired
 	AccountDaoImpl accDaoImpl;
 	@Autowired
-	Account account;
-	@Autowired
-	UserDaoImpl userDaoImpl;
+	UserDaoImpl	userDaoImpl;
 
 	// GLOBAL VARIABLES
 	float userBalance;
@@ -44,62 +42,59 @@ public class BankController {
 	// GETTING METHODS
 
 	@GetMapping("/mainPage")
-	public String showMainPage() {
-
+	public String showMainPage(ModelMap model) {
 		// page to display
 		return "mainPage";
 	}
 
 	@GetMapping("/deposit")
-	public String showDeposit() {
-
+	public String showDeposit(ModelMap model) {
+		
 		// page to display
 		return "deposit";
 	}
 
 	@GetMapping("/withdraw")
-	public String showWithdraw() {
+	public String showWithdraw(ModelMap model) {
 
 		// page to display
 		return "withdraw";
 	}
 
 	@GetMapping("/fundTransfer")
-	public String showFundTransfer() {
+	public String showFundTransfer(ModelMap model) {
 
 		// page to display
 		return "fundTransfer";
 	}
 
 	@GetMapping("/transactionHistory")
-	public String showHistory() {
+	public String showHistory(ModelMap model) {
 
 		// page to display
 		return "transactionHistory";
 	}
 
 	@GetMapping("/myAccount")
-	public String showMyAccount() {
+	public String showMyAccount(ModelMap model) {
 
 		// page to display
 		return "myAccount";
 	}
 
-	@PostMapping(path = "/user/add")
-	public @ResponseBody String addNewUser(@RequestParam String firstName, @RequestParam String lastName,
-			@RequestParam String address, @RequestParam String contactNum, @RequestParam String password,
-			@RequestParam float initialDeposit) {
-
-		User n = new User();
-		n.setFirstName(firstName);
-		n.setLastName(lastName);
-		n.setAddress(address);
-		n.setContactNum(contactNum);
-		n.setPassword(password);
-		n.setInitialDeposit(initialDeposit);
-		userRepo.save(n);
-		return "Saved";
-	}
+	/*
+	 * @PostMapping(path = "/user/add") public @ResponseBody String
+	 * addNewUser(@RequestParam String firstName, @RequestParam String lastName,
+	 * 
+	 * @RequestParam String address, @RequestParam String contactNum, @RequestParam
+	 * String password,
+	 * 
+	 * @RequestParam float initialDeposit) {
+	 * 
+	 * User n = new User(); n.setFirstName(firstName); n.setLastName(lastName);
+	 * n.setAddress(address); n.setContactNum(contactNum); n.setPassword(password);
+	 * n.setInitialDeposit(initialDeposit); userRepo.save(n); return "Saved"; }
+	 */
 
 	@GetMapping(path = "/user/all")
 	public @ResponseBody Iterable<User> getAllUsers() {
@@ -119,7 +114,7 @@ public class BankController {
 	// POSTING METHODS
 
 	@PostMapping("/deposit")
-	public String depositSuccess(ModelMap model, float amount) {
+	public @ResponseBody String depositSuccess(ModelMap model, @RequestParam float amount) {
 
 		// create user instance that we can work with
 		User loggedUser = (User) model.getAttribute("user");
@@ -147,8 +142,9 @@ public class BankController {
 	}
 
 	@PostMapping("/withdraw")
-	public String withdrawSuccess(ModelMap model, float amount) {
+	public @ResponseBody String withdrawSuccess(ModelMap model, @RequestParam float amount) {
 
+		System.out.println("model is " + model);
 		// create user instance that we can work with
 		User loggedUser = (User) model.getAttribute("user");
 
@@ -174,8 +170,8 @@ public class BankController {
 		return "depositSuccess"; // return front end page if deposit is updated successfully
 	}
 
-	@PostMapping()
-	public String fundTransferSuccess(ModelMap model, int receiverId, float amount) {
+	@PostMapping("/fundTransfer")
+	public @ResponseBody String fundTransferSuccess(ModelMap model, @RequestParam int receiverId, @RequestParam float amount) {
 
 		// create user instance that we can work with
 		User loggedUser = (User) model.getAttribute("user");

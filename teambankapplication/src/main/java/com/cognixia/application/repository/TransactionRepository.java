@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import com.cognixia.application.model.Transaction;
 
-@Repository
+@Repository("transactionRepo")
 public interface TransactionRepository extends CrudRepository<Transaction, Integer> {
 
 }

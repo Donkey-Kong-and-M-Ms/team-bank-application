@@ -3,15 +3,10 @@ package com.cognixia.application.dao;
 import java.sql.PreparedStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import org.springframework.stereotype.Component;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.cognixia.application.model.Account;
-
+@Component
 public class AccountDaoImpl implements AccountDao {
-
-	@Autowired
-	Account acc;
 
 	// name of DB table may change
 	private static final String UPDATE_BALANCE = "UPDATE DBAccount SET account_value = ? where account_id = ?";

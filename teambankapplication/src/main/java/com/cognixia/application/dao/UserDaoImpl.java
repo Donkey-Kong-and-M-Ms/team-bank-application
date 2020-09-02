@@ -6,10 +6,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.cognixia.application.repository.UserRepository;
 
 import com.cognixia.application.model.User;
 
+@Component
 public class UserDaoImpl implements UserDao {
 
 	@Autowired
@@ -23,7 +26,7 @@ public class UserDaoImpl implements UserDao {
 	// may need to remove the " jdbc:mysql: " portion
 	private static final String URL = "jdbc:mysql:team-bank-database.c7lmsujwlyzy.us-east-2.rds.amazonaws.com";
 	private static final String USERNAME = "root";
-	private static final String PASSWORD = "Password#1";
+	private static final String PASSWORD = "root"; //Password#1
 
 	// SQL queries to be used below
 	static final String FIND_USER_BY_ID = "select * from DBUser where id=?";
@@ -33,7 +36,7 @@ public class UserDaoImpl implements UserDao {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			// LOCALHOST URL IS FOR TESTING ONLY
-			conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", USERNAME, PASSWORD);
 
 			return conn;
 
