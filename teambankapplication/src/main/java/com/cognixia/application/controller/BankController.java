@@ -21,6 +21,8 @@ import com.cognixia.application.repository.TransactionRepository;
 import com.cognixia.application.repository.UserRepository;
 import com.cognixia.application.utility.ErrorUtil;
 import com.cognixia.application.utility.InputValidationUtil;
+import com.cognixia.application.utility.MessageUtil;
+import com.cognixia.application.utility.SuccessUtil;
 import com.cognixia.application.utility.TransactionUtil;
 
 @RestController
@@ -179,7 +181,7 @@ public class BankController {
 		addNewAccount(userId, accountType, initialDeposit);
 		addNewTransaction(userId, TransactionUtil.register(initialDeposit, firstName + " " + lastName));
 		
-		return "Registered User";
+		return SuccessUtil.successRegister();
 	}
 	
 	// Add new user
@@ -241,7 +243,8 @@ public class BankController {
 		if(InputValidationUtil.positiveNumber(deposit)) {
 			accountToUpdate.deposit(deposit);
 			accountRepo.save(accountToUpdate);
-			return "Deposit successful, new balance: " + accountToUpdate.getBalance();
+			addNewTransaction(accountToUpdate.getUserId(), TransactionUtil.deposit(deposit, accountToUpdate.getAccountType()));
+			return SuccessUtil.successDeposit() + " " + MessageUtil.newBalance(deposit);
 		} else {
 			return ErrorUtil.errorNotPositive();
 		}
@@ -255,7 +258,8 @@ public class BankController {
 			if(InputValidationUtil.sufficientFunds(withdraw, accountToUpdate)) {
 				accountToUpdate.withdraw(withdraw);
 				accountRepo.save(accountToUpdate);
-				return "Withdraw successful, new balance: " + accountToUpdate.getBalance();
+				addNewTransaction(accountToUpdate.getUserId(), TransactionUtil.withdraw(withdraw, accountToUpdate.getAccountType()));
+				return SuccessUtil.successWithdraw() + " " + MessageUtil.newBalance(withdraw);
 			} else {
 				return ErrorUtil.errorNotEnough();
 			}
@@ -296,7 +300,10 @@ public class BankController {
 			accountToUpdate.withdraw(transfer);
 			otherAccount.deposit(transfer);
 			accountRepo.save(accountToUpdate);
-			return "Transfer successful, new balance: " + accountToUpdate.getBalance();
+			accountRepo.save(otherAccount);
+			addNewTransaction(accountToUpdate.getUserId(), TransactionUtil.giveTransfer(transfer, accountToUpdate.getAccountType()));
+			addNewTransaction(otherAccount.getUserId(), TransactionUtil.receiveTransfer(transfer, otherAccount.getAccountType()));
+			return SuccessUtil.successTransfer() + " " + MessageUtil.newBalance(transfer);
 		} else {
 			return errorMessage;
 		}
@@ -306,21 +313,6 @@ public class BankController {
 	@GetMapping(path = "/account/all")
 	public @ResponseBody Iterable<Account> getAllAccounts() {
 		return accountRepo.findAll();
-	}
-	
-	// Get all accounts of certain user ID
-	@GetMapping(path = "/account/all/{userid}")
-	public @ResponseBody List<Account> getAllAccountsByUserID(@PathVariable Integer userid) {
-		List<Account> accountsByUserId = new ArrayList<Account>();
-		// Loop through all accounts
-		// Add accounts with matching user id to list
-		for(Account a: accountRepo.findAll()) {
-			if(a.getUserId().equals(userid)) {
-				accountsByUserId.add(a);
-			}
-		}
-		
-		return accountsByUserId;
 	}
 	
 	// Get account by account ID
@@ -347,8 +339,44 @@ public class BankController {
 		return transactionRepo.findAll();
 	}
 	
+	// Get transaction by transaction ID
+	@GetMapping(path = "/transaction/{transactionid}")
+	public @ResponseBody Optional<Transaction> getTransactionByID(@PathVariable Integer transactionid) {
+		return transactionRepo.findById(transactionid);
+	}
+	
+	// Get all accounts of certain user ID
+	@GetMapping(path = "/{userid}/account")
+	public @ResponseBody List<Account> getAllAccountsByUserID(@PathVariable Integer userid) {
+		List<Account> accountsByUserId = new ArrayList<Account>();
+		// Loop through all accounts
+		// Add accounts with matching user id to list
+		for(Account a: accountRepo.findAll()) {
+			if(a.getUserId().equals(userid)) {
+				accountsByUserId.add(a);
+			}
+		}
+		
+		return accountsByUserId;
+	}
+	
+	// Get all accounts of certain user ID, made readable
+	@GetMapping(path = "/{userid}/account/pretty")
+	public @ResponseBody List<String> getAccounTypeNadBalanceByUserID(@PathVariable Integer userid) {
+		List<String> accountTypeAndBalance = new ArrayList<String>();
+		// Loop through all accounts
+		// Add accounts with matching user id to list
+		for(Account a: accountRepo.findAll()) {
+			if(a.getUserId().equals(userid)) {
+				accountTypeAndBalance.add("Account " + a.getAccountId() + ": " + a.getAccountType() + ", $" + a.getBalance());
+			}
+		}
+		
+		return accountTypeAndBalance;
+	}
+	
 	// Get all transactions of a certain user ID
-	@GetMapping(path = "/transaction/all/{userid}")
+	@GetMapping(path = "/{userid}/transaction")
 	public @ResponseBody List<Transaction> getAllTransactionsByUserID(@PathVariable Integer userid) {
 		List<Transaction> transactionsByUserId = new ArrayList<Transaction>();
 		// Loop through all transactions
@@ -362,10 +390,94 @@ public class BankController {
 		return transactionsByUserId;
 	}
 	
-	// Get transaction by transaction ID
-	@GetMapping(path = "/transaction/{transactionid}")
-	public @ResponseBody Optional<Transaction> getTransactionByID(@PathVariable Integer transactionid) {
-		return transactionRepo.findById(transactionid);
+	// Get all transactions of a certain user ID, just the descriptions
+	@GetMapping(path = "/{userid}/transaction/description")
+	public @ResponseBody List<String> getAllTransactionDescriptionsByUserID(@PathVariable Integer userid) {
+		List<String> transactionDescriptions = new ArrayList<String>();
+		// Loop through all transactions
+		// Add transactions with matching user id to list
+		for(Transaction t: transactionRepo.findAll()) {
+			if(t.getUserId().equals(userid)) {
+				transactionDescriptions.add(t.getDescription());
+			}
+		}
+
+		return transactionDescriptions;
 	}
+	
+	// Deposit to account
+		@PostMapping(path = "/{userid}/deposit")
+		public @ResponseBody String depositToUser(@PathVariable Integer userid,
+				@RequestParam Integer accountid, @RequestParam float deposit) {
+			Account accountToUpdate = accountRepo.getOne(accountid);
+			if(InputValidationUtil.positiveNumber(deposit)) {
+				accountToUpdate.deposit(deposit);
+				accountRepo.save(accountToUpdate);
+				addNewTransaction(userid, TransactionUtil.deposit(deposit, accountToUpdate.getAccountType()));
+				return SuccessUtil.successDeposit() + " " + MessageUtil.newBalance(deposit);
+			} else {
+				return ErrorUtil.errorNotPositive();
+			}
+		}
+		
+		// Withdraw from account
+		@PostMapping(path = "/{userid}/withdraw")
+		public @ResponseBody String withdrawFromUser(@PathVariable Integer userid,
+				@RequestParam Integer accountid, @RequestParam float withdraw) {
+			Account accountToUpdate = accountRepo.getOne(accountid);
+			if(InputValidationUtil.positiveNumber(withdraw)) {
+				if(InputValidationUtil.sufficientFunds(withdraw, accountToUpdate)) {
+					accountToUpdate.withdraw(withdraw);
+					accountRepo.save(accountToUpdate);
+					addNewTransaction(userid, TransactionUtil.withdraw(withdraw, accountToUpdate.getAccountType()));
+					return SuccessUtil.successWithdraw() + " " + MessageUtil.newBalance(withdraw);
+				} else {
+					return ErrorUtil.errorNotEnough();
+				}
+			} else {
+				return ErrorUtil.errorNotPositive();
+			}
+		}
+		
+		// Transfer to other account
+		@PostMapping(path = "/{userid}/transfer")
+		public @ResponseBody String transferBetweenUserAccounts(@PathVariable Integer userid,
+				@RequestParam Integer accountid, @RequestParam Integer transferAccountid, @RequestParam float transfer) {
+			Account accountToUpdate = accountRepo.getOne(accountid);
+			Account otherAccount = accountRepo.getOne(transferAccountid);
+			
+			boolean noErrorNumber = false;
+			boolean noErrorUser = false;
+			
+			String errorMessage = "";
+			
+			if(InputValidationUtil.userExists(transferAccountid, userRepo)) {
+				noErrorUser = true;
+			} else {
+				errorMessage += ErrorUtil.errorUserNotFound() + ", ";
+			}
+			
+			if(InputValidationUtil.positiveNumber(transfer)) {
+				if(InputValidationUtil.sufficientFunds(transfer, accountToUpdate)) {
+					noErrorNumber = true;
+				} else {
+					errorMessage += ErrorUtil.errorNotEnough();
+				}
+			} else {
+				errorMessage += ErrorUtil.errorNotPositive();
+			}
+			
+			if(noErrorUser && noErrorNumber) {
+				accountToUpdate.withdraw(transfer);
+				otherAccount.deposit(transfer);
+				accountRepo.save(accountToUpdate);
+				accountRepo.save(otherAccount);
+				addNewTransaction(userid, TransactionUtil.giveTransfer(transfer, accountToUpdate.getAccountType()));
+				addNewTransaction(otherAccount.getUserId(), TransactionUtil.receiveTransfer(transfer, otherAccount.getAccountType()));
+				return SuccessUtil.successTransfer() + " " + MessageUtil.newBalance(transfer);
+			} else {
+				return errorMessage;
+			}
+		}
 	
 }
