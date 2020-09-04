@@ -24,7 +24,7 @@ public class LoginService {
 
 			if (user.getUserId().equals(userId) && user.getPassword().equals(userPass)) {
 				System.out.println("model prior to putting is " + model);
-				model.put("user", user);
+				model.addAttribute("user", user);
 				System.out.println("model after put is " + model);
 				return true;
 			}

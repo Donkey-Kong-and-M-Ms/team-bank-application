@@ -54,6 +54,19 @@ public class Account {
 	public void setBalance(float balance) {
 		this.balance = balance;
 	}
+	
+
+	public Account() {
+		super();
+	}
+
+	public Account(Integer accountId, Integer userId, String accountType, float balance) {
+		super();
+		this.accountId = accountId;
+		this.userId = userId;
+		this.accountType = accountType;
+		this.balance = balance;
+	}
 
 	@Override
 	public String toString() {

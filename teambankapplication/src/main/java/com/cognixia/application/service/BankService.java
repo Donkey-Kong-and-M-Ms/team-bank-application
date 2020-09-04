@@ -1,6 +1,7 @@
 package com.cognixia.application.service;
 
-import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,8 +14,8 @@ public class BankService {
 
 	@Autowired
 	TransactionRepository transactionRepo;
-
-	Timestamp ts;
+	
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd - HH.mm.ss");
 
 	//deposit method used in Bank controller
 	public float deposit(float balance, float amount) {
@@ -31,7 +32,9 @@ public class BankService {
 	// since IDs are auto-generated, dont need as params
 	// full params listed (int userId, String description)
 	public void addHistory(int id, String description) {
-		transactionRepo.save(new Transaction(0, id, description + " at " + ts.toLocalDateTime()));
+		Date timestamp = new java.util.Date();
+		
+		transactionRepo.save(new Transaction(0, id, description + " @ " + sdf.format(timestamp)));
 
 	}
 

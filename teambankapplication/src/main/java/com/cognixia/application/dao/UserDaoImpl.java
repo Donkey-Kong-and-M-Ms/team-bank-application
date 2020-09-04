@@ -29,12 +29,12 @@ public class UserDaoImpl implements UserDao {
 	private static final String PASSWORD = "root"; //Password#1
 
 	// SQL queries to be used below
-	static final String FIND_USER_BY_ID = "select * from DBUser where id=?";
+	static final String FIND_USER_BY_ID = "select * from DBUser where user_id=?";
 
 	public static Connection getConnection() {
 		Connection conn = null;
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 			// LOCALHOST URL IS FOR TESTING ONLY
 			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", USERNAME, PASSWORD);
 

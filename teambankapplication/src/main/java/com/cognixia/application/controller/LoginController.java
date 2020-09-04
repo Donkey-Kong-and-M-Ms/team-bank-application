@@ -3,12 +3,14 @@ package com.cognixia.application.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 import com.cognixia.application.model.User;
 import com.cognixia.application.repository.UserRepository;
 import com.cognixia.application.service.LoginService;
@@ -18,7 +20,7 @@ import com.cognixia.application.service.LoginService;
 public class LoginController {
 	@Autowired
 	LoginService lService;
-	
+
 	@Autowired
 	UserRepository userRepo;
 
@@ -36,7 +38,6 @@ public class LoginController {
 		return "login";
 	}
 
-	// THE POST IS DONE IN BANK CONTROLLER
 	@GetMapping("/user/add")
 	public String showRegister() {
 		return "/user/add";
@@ -60,17 +61,20 @@ public class LoginController {
 		return "Saved";
 	}
 
-	// may not use models for logging but httpSessions?
+	// redirectView used to redirect to the bank controller
+	//redirectAttributes is used to redirect the model to the bank controller
 	@PostMapping("/login")
-	public @ResponseBody String loginSuccess(ModelMap model, @RequestParam int userId, @RequestParam String userPass) throws Exception{
+	public @ResponseBody RedirectView loginSuccess(@ModelAttribute ModelMap model, @RequestParam int userId,
+			@RequestParam String userPass, RedirectAttributes red) {
 
-		// THIS IS A WARNING MESSAGE IF THE LOGIN FAILED
 		// model is updated in the login service
 		if (lService.loginVerify(model, userId, userPass)) {
-			
-			return "loginSuccess";
+			System.out.println("model inside controller is " + model);
+			red.addFlashAttribute("user", model.getAttribute("user"));
+			System.out.println("red is " + red);
+			return new RedirectView("/bank/mainPage", true);
 		}
-		return "loginFail";
+		return new RedirectView("/login/login", false);
 	}
 
 }
