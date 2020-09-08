@@ -34,10 +34,6 @@ public class User {
 	@Column(name = "initial_deposit")
 	private float initialDeposit;
 
-	private List accountList;
-
-	private List transactionList;
-
 	public Integer getUserId() {
 		return userId;
 	}
@@ -92,22 +88,6 @@ public class User {
 
 	public void setInitialDeposit(float initialDeposit) {
 		this.initialDeposit = initialDeposit;
-	}
-
-	public List getAccountList() {
-		return accountList;
-	}
-
-	public void setAccountList(List accountList) {
-		this.accountList = accountList;
-	}
-
-	public List getTransactionList() {
-		return transactionList;
-	}
-
-	public void setTransactionList(List transactionList) {
-		this.transactionList = transactionList;
 	}
 
 	public User(Integer userId, String firstName, String lastName, String address, String contactNum, String password,
