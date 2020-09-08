@@ -34,9 +34,9 @@ public class User {
 	@Column(name = "initial_deposit")
 	private float initialDeposit;
 
-	private List accountList;
+	private List<?> accountList;
 
-	private List transactionList;
+	private List<?> transactionList;
 
 	public Integer getUserId() {
 		return userId;
@@ -94,19 +94,19 @@ public class User {
 		this.initialDeposit = initialDeposit;
 	}
 
-	public List getAccountList() {
+	public List<?> getAccountList() {
 		return accountList;
 	}
 
-	public void setAccountList(List accountList) {
+	public void setAccountList(List<?> accountList) {
 		this.accountList = accountList;
 	}
 
-	public List getTransactionList() {
+	public List<?> getTransactionList() {
 		return transactionList;
 	}
 
-	public void setTransactionList(List transactionList) {
+	public void setTransactionList(List<?> transactionList) {
 		this.transactionList = transactionList;
 	}
 
