@@ -23,6 +23,8 @@ public class Account {
 
 	@Column(name = "account_value")
 	private float balance;
+	
+	private int userId;
 
 	public Integer getAccountId() {
 		return accountId;
