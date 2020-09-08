@@ -5,20 +5,24 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity(name = "DBTransaction")
 public class Transaction {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "transaction_id")
 	private Integer transactionId;
-
-	@Column(name = "user_id")
-	private Integer userId;
-
+	
+	@ManyToOne(targetEntity = User.class)
+	private User user;
+  
 	@Column(name = "transaction_description")
 	private String description;
+  
+  private Integer userId;
 
 	public Integer getTransactionId() {
 		return transactionId;
@@ -29,11 +33,11 @@ public class Transaction {
 	}
 
 	public Integer getUserId() {
-		return userId;
+		return user.getUserId();
 	}
 
 	public void setUserId(Integer userId) {
-		this.userId = userId;
+		this.user.setUserId(userId);
 	}
 
 	public String getDescription() {
@@ -42,6 +46,20 @@ public class Transaction {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+	
+	public void setUser(int userId) {
+		User newUser = new User();
+		newUser.setUserId(userId);
+		this.user = newUser;
 	}
 
 	public Transaction(Integer transactionId, Integer userId, String description) {
@@ -60,5 +78,4 @@ public class Transaction {
 		return "Transaction [transactionId=" + transactionId + ", userId=" + userId + ", description=" + description
 				+ "]";
 	}
-
 }

@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.cognixia.application.model.Account;
 
 @Repository("accountRepo")
-public interface AccountRepository extends CrudRepository<Account, Integer> {
+public interface AccountRepository extends JpaRepository<Account, Integer> {
 
 }
