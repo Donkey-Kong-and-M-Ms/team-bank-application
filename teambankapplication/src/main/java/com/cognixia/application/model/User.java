@@ -34,10 +34,13 @@ public class User {
 	@Column(name = "initial_deposit")
 	private float initialDeposit;
 
+<<<<<<< HEAD
 	private List<?> accountList;
 
 	private List<?> transactionList;
 
+=======
+>>>>>>> c823700abb37286c7f16ad1bb12bd91fb65a1d05
 	public Integer getUserId() {
 		return userId;
 	}
@@ -94,6 +97,7 @@ public class User {
 		this.initialDeposit = initialDeposit;
 	}
 
+<<<<<<< HEAD
 	public List<?> getAccountList() {
 		return accountList;
 	}
@@ -110,6 +114,8 @@ public class User {
 		this.transactionList = transactionList;
 	}
 
+=======
+>>>>>>> c823700abb37286c7f16ad1bb12bd91fb65a1d05
 	public User(Integer userId, String firstName, String lastName, String address, String contactNum, String password,
 			float initialDeposit) {
 		super();

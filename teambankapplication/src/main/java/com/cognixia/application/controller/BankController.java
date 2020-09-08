@@ -265,8 +265,8 @@ public class BankController {
 	// the service for acc validation is dependant on the spelling of the
 	// accountType.
 	// it must be "Checking" or "Savings"
-	@PostMapping("/account/add")
-	public @ResponseBody String addNewAccount(ModelMap model, @RequestParam String accountType) {
+	@PostMapping("/account/add/valid")
+	public @ResponseBody String addNewAccountValid(ModelMap model, @RequestParam String accountType) {
 
 		User loggedUser = (User) model.getAttribute("user");
 
