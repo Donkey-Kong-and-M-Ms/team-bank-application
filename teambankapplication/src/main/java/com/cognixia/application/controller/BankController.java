@@ -54,10 +54,8 @@ public class BankController {
 
 		if (previousUser != null) {
 			previousUser.get("user");
-			System.out.println("the user from bigred is " + previousUser);
 		}
 
-		System.out.println("model in painPage is: " + model);
 		// page to display
 		return "mainPage";
 	}
@@ -102,20 +100,6 @@ public class BankController {
 		return "myAccount";
 	}
 
-	/*
-	 * @PostMapping(path = "/user/add") public @ResponseBody String
-	 * addNewUser(@RequestParam String firstName, @RequestParam String lastName,
-	 * 
-	 * @RequestParam String address, @RequestParam String contactNum, @RequestParam
-	 * String password,
-	 * 
-	 * @RequestParam float initialDeposit) {
-	 * 
-	 * User n = new User(); n.setFirstName(firstName); n.setLastName(lastName);
-	 * n.setAddress(address); n.setContactNum(contactNum); n.setPassword(password);
-	 * n.setInitialDeposit(initialDeposit); userRepo.save(n); return "Saved"; }
-	 */
-
 	@GetMapping(path = "/user/all")
 	public @ResponseBody Iterable<User> getAllUsers() {
 		return userRepo.findAll();
@@ -133,22 +117,26 @@ public class BankController {
 
 	// POSTING METHODS
 
+	// the service for acc validation is dependant on the spelling of the
+	// accountType.
+	// it must be "Checking" or "Savings"
 	@PostMapping("/account/add")
 	public @ResponseBody String addNewAccount(ModelMap model, @RequestParam String accountType) {
 
 		User loggedUser = (User) model.getAttribute("user");
 
-		Account a = new Account();
-		a.setUserId(loggedUser.getUserId());
-		a.setAccountType(accountType);
-		a.setBalance(loggedUser.getInitialDeposit());
-		accountRepo.save(a);
+		if (bank.accountValidation(accountType)) {
 
-		return "account added";
+			accountRepo.save(new Account(0, loggedUser.getUserId(), accountType, loggedUser.getInitialDeposit()));
+
+			return "account added";
+		}
+
+		return "account already exists with this user";
 	}
 
 	@PostMapping("/deposit")
-	public @ResponseBody String depositSuccess(ModelMap model, @RequestParam float amount) {
+	public @ResponseBody String depositSuccess(ModelMap model, @RequestParam float amount, @RequestParam String accountType) {
 
 		// create user instance that we can work with
 		User loggedUser = (User) model.getAttribute("user");
@@ -156,8 +144,9 @@ public class BankController {
 		// using the user object to get a user id
 		int userId = loggedUser.getUserId();
 
-		Account acc = accDaoImpl.getAccountByUserId(userId);
-
+		//grabs the account where userId and accountType match
+		Account acc = accDaoImpl.getAccountByUserIdAndAccountType(userId, accountType);
+		
 		// using the user id to connect to an account id (to be used for transactions)
 		int accId = acc.getAccountId();
 
@@ -179,16 +168,16 @@ public class BankController {
 	}
 
 	@PostMapping("/withdraw")
-	public @ResponseBody String withdrawSuccess(ModelMap model, @RequestParam float amount) {
+	public @ResponseBody String withdrawSuccess(ModelMap model, @RequestParam float amount, @RequestParam String accountType) {
 
-		System.out.println("model is " + model);
 		// create user instance that we can work with
 		User loggedUser = (User) model.getAttribute("user");
 
 		// using the user object to get a user id
 		int userId = loggedUser.getUserId();
 
-		Account acc = accDaoImpl.getAccountByUserId(userId);
+		//grabs the account where userId and accountType match
+		Account acc = accDaoImpl.getAccountByUserIdAndAccountType(userId, accountType);
 
 		// using the user id to connect to an account id (to be used for transactions)
 		int accId = acc.getAccountId();
@@ -211,7 +200,7 @@ public class BankController {
 
 	@PostMapping("/fundTransfer")
 	public @ResponseBody String fundTransferSuccess(ModelMap model, @RequestParam int receiverId,
-			@RequestParam float amount) {
+			@RequestParam float amount, @RequestParam String userAccountType, @RequestParam String recAccountType) {
 
 		// create user instance that we can work with
 		User loggedUser = (User) model.getAttribute("user");
@@ -223,8 +212,8 @@ public class BankController {
 		// using the user object to get a user id
 		int userId = loggedUser.getUserId();
 
-		Account acc = accDaoImpl.getAccountByUserId(userId);
-		Account recAcc = accDaoImpl.getAccountByUserId(receiverId);
+		Account acc = accDaoImpl.getAccountByUserIdAndAccountType(userId, userAccountType);
+		Account recAcc = accDaoImpl.getAccountByUserIdAndAccountType(receiverId, recAccountType);
 
 		// using the user id to connect to an account id (to be used for transactions)
 		int accId = acc.getAccountId();

@@ -2,6 +2,8 @@ package com.cognixia.application.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import org.springframework.stereotype.Component;
@@ -15,7 +17,7 @@ public class AccountDaoImpl implements AccountDao {
 	// name of DB table may change
 	private static final String UPDATE_BALANCE = "UPDATE DBAccount SET account_value = ? where account_id = ?";
 
-	private static final String ACCOUNT_BY_USER_ID = "SELECT * FROM DBAccount WHERE user_id = ?";
+	private static final String ACCOUNT_BY_USER_ID_AND_ACCOUNT_TYPE = "SELECT * FROM DBAccount WHERE user_id = ? AND account_type = ?";
 
 	private static final String ACCOUNT_BALANCE_BY_ACCOUNT_ID = "SELECT account_value FROM DBAccount WHERE account_id = ?";
 
@@ -23,7 +25,7 @@ public class AccountDaoImpl implements AccountDao {
 	// may need to remove the " jdbc:mysql: " portion
 	private static final String URL = "jdbc:mysql:team-bank-database.c7lmsujwlyzy.us-east-2.rds.amazonaws.com";
 	private static final String USERNAME = "root";
-	private static final String PASSWORD = "root"; //Password#1
+	private static final String PASSWORD = "Password#1";
 
 	Connection conn;
 	PreparedStatement stmt;
@@ -33,8 +35,7 @@ public class AccountDaoImpl implements AccountDao {
 		Connection conn = null;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			// LOCALHOST URL IS FOR TESTING ONLY
-			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", USERNAME, PASSWORD);
+			conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
 
 			return conn;
 
@@ -72,17 +73,18 @@ public class AccountDaoImpl implements AccountDao {
 		return 0;
 	}
 
-	public Account getAccountByUserId(int userId) {
-		
+	public Account getAccountByUserIdAndAccountType(int userId, String accountType) {
+
 		Account acc = new Account();
 
 		try {
 			conn = getConnection();
 
-			stmt = conn.prepareStatement(ACCOUNT_BY_USER_ID);
+			stmt = conn.prepareStatement(ACCOUNT_BY_USER_ID_AND_ACCOUNT_TYPE);
 
 			stmt.setInt(1, userId);
-			
+			stmt.setString(2, accountType);
+
 			rs = stmt.executeQuery();
 
 			while (rs.next()) {
@@ -93,7 +95,6 @@ public class AccountDaoImpl implements AccountDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return acc;
 	}
 
@@ -106,7 +107,7 @@ public class AccountDaoImpl implements AccountDao {
 			stmt = conn.prepareStatement(ACCOUNT_BALANCE_BY_ACCOUNT_ID);
 
 			stmt.setInt(1, accId);
-			
+
 			stmt.executeQuery();
 		} catch (Exception e) {
 			e.printStackTrace();

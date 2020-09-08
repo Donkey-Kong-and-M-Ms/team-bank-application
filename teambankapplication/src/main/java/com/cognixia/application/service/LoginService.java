@@ -44,7 +44,18 @@ public class LoginService {
 		} else
 			return false;
 	}
+	
+	// validation for phone number
+		public boolean phoneValidation(String contactNum) {
 
-	// model removal/replacement for user
+			// checks to see if there is a format of (XXX)XXX-XXXX
+			if (contactNum.matches("\\(\\d{3}\\)-\\d{3}-\\d{4}")) {
+
+				return true;
+			} else {
+				return false;
+			}
+
+		}
 
 }

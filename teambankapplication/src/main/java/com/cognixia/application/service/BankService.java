@@ -6,6 +6,7 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cognixia.application.dao.AccountDaoImpl;
 import com.cognixia.application.model.Transaction;
 import com.cognixia.application.repository.TransactionRepository;
 
@@ -14,16 +15,19 @@ public class BankService {
 
 	@Autowired
 	TransactionRepository transactionRepo;
-	
+
+	@Autowired
+	AccountDaoImpl accDaoImpl;
+
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd - HH.mm.ss");
 
-	//deposit method used in Bank controller
+	// deposit method used in Bank controller
 	public float deposit(float balance, float amount) {
 		balance = balance + amount;
 		return balance;
 	}
 
-	//withdraw method used in Bank controller
+	// withdraw method used in Bank controller
 	public float withdraw(float balance, float amount) {
 		balance = balance - amount;
 		return balance;
@@ -33,21 +37,19 @@ public class BankService {
 	// full params listed (int userId, String description)
 	public void addHistory(int id, String description) {
 		Date timestamp = new java.util.Date();
-		
+
 		transactionRepo.save(new Transaction(0, id, description + " @ " + sdf.format(timestamp)));
 
 	}
 
-	// validation for phone number
-	public boolean phoneValidation(String contactNum) {
+	public boolean accountValidation(String accountName) {
 
-		// checks to see if there is a format of (XXX)XXX-XXXX
-		if (contactNum.matches("\\(\\d{3}\\)-\\d{3}-\\d{4}")) {
-
+		if (accountName.equalsIgnoreCase("Checking") | accountName.equalsIgnoreCase("Savings")) {
 			return true;
-		} else {
-			return false;
 		}
 
+		return false;
+
 	}
+
 }

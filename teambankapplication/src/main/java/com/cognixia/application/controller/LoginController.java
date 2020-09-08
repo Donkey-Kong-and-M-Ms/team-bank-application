@@ -50,15 +50,22 @@ public class LoginController {
 			@RequestParam String address, @RequestParam String contactNum, @RequestParam String password,
 			@RequestParam float initialDeposit) {
 
-		User n = new User();
-		n.setFirstName(firstName);
-		n.setLastName(lastName);
-		n.setAddress(address);
-		n.setContactNum(contactNum);
-		n.setPassword(password);
-		n.setInitialDeposit(initialDeposit);
-		userRepo.save(n);
-		return "Saved";
+		/*
+		 * User n = new User();
+		 * 
+		 * n.setFirstName(firstName); n.setLastName(lastName); n.setAddress(address);
+		 * n.setContactNum(contactNum); n.setPassword(password);
+		 * n.setInitialDeposit(initialDeposit);
+		 */
+		 
+		
+		if(lService.passWordValidation(password) && lService.phoneValidation(contactNum)) {
+			userRepo.save(new User(0, firstName, lastName, address, contactNum, password, initialDeposit));
+			return "User added";
+		}
+		
+		//userRepo.save(n);
+		return "User already exists";
 	}
 
 	// redirectView used to redirect to the bank controller
