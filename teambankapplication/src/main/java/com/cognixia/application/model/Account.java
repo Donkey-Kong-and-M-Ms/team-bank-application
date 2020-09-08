@@ -7,7 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-@Entity
+@Entity(name = "DBAccount")
 public class Account {
 
 	@Id
@@ -20,7 +20,7 @@ public class Account {
 	
 	@Column(name = "account_type")
 	private String accountType;
-	
+
 	@Column(name = "account_value")
 	private float balance;
 
@@ -62,8 +62,26 @@ public class Account {
 
 	public void setUser(User user) {
 		this.user = user;
+  }
+  
+	public Account() {
+		super();
 	}
-	
+
+	public Account(Integer accountId, Integer userId, String accountType, float balance) {
+		super();
+		this.accountId = accountId;
+		this.userId = userId;
+		this.accountType = accountType;
+		this.balance = balance;
+	}
+
+	@Override
+	public String toString() {
+		return "Account [accountId=" + accountId + ", userId=" + userId + ", accountType=" + accountType + ", balance="
+				+ balance + "]";
+	}
+
 	public void setUser(int userId) {
 		User newUser = new User();
 		newUser.setUserId(userId);

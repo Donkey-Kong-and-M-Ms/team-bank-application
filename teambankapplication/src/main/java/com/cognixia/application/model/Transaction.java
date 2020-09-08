@@ -7,19 +7,22 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-@Entity
+@Entity(name = "DBTransaction")
 public class Transaction {
 
 	@Id
+
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "transaction_id")
 	private Integer transactionId;
 	
 	@ManyToOne(targetEntity = User.class)
 	private User user;
-	
+  
 	@Column(name = "transaction_description")
 	private String description;
+  
+  private Integer userId;
 
 	public Integer getTransactionId() {
 		return transactionId;
@@ -59,4 +62,20 @@ public class Transaction {
 		this.user = newUser;
 	}
 
+	public Transaction(Integer transactionId, Integer userId, String description) {
+		super();
+		this.transactionId = transactionId;
+		this.userId = userId;
+		this.description = description;
+	}
+
+	public Transaction() {
+		super();
+	}
+
+	@Override
+	public String toString() {
+		return "Transaction [transactionId=" + transactionId + ", userId=" + userId + ", description=" + description
+				+ "]";
+	}
 }
