@@ -34,22 +34,46 @@ public class InputValidationUtil {
 		}
 	}
 	
-	// TODO
-	// Start with just 10 digit number, maybe expand to (123) 456-7890 or 123-456-7890
 	public static boolean validPhoneNum(String phoneNum) {
-		return false;
+		// checks to see if there is a format of (XXX)XXX-XXXX
+		if (phoneNum.matches("\\(\\d{3}\\)-\\d{3}-\\d{4}")) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
-	// TODO
-	// Criteria is something like: At least 1 Uppercase, 1 Lowercase, 1 Special
+	// password validation
+	// criteria - at least: 1 number, 1 lower case, 1 upper case, 1 special
+	// character, 8-30 characters long
 	public static boolean validPassword(String password) {
-		return false;
+		
+		if (password.matches("?=.*[a-z])(?=.*\\d)(?=.*[A-Z])(?=.*[@#$%!*]).{8,30}")) {
+			return true;
+		} else
+			return false;
 	}
 	
 	// TODO
 	// Requires credential lookup - pass userRepo?
-	public static boolean validLogin(String userid, String password) {
+	public static boolean validLogin(int userid, String password, UserRepository userRepo) {
+		List<User> uList = (List<User>) userRepo.findAll();
+
+		for (User user : uList) {
+			if (user.getUserId().equals(userid) && user.getPassword().equals(password)) {
+				return true;
+			}
+
+		}
 		return false;
 	}
 
+	
+	public static boolean validAccountType(String accountType) {
+		if (accountType.equalsIgnoreCase("Checking") | accountType.equalsIgnoreCase("Savings")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

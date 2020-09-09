@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.cognixia.application.dao.AccountDaoImpl;
 import com.cognixia.application.model.Transaction;
 import com.cognixia.application.repository.TransactionRepository;
+import com.cognixia.application.utility.InputValidationUtil;
 
 @Service
 public class BankService {
@@ -43,13 +44,7 @@ public class BankService {
 	}
 
 	public boolean accountValidation(String accountName) {
-
-		if (accountName.equalsIgnoreCase("Checking") | accountName.equalsIgnoreCase("Savings")) {
-			return true;
-		}
-
-		return false;
-
+		return InputValidationUtil.validAccountType(accountName);
 	}
 
 }
