@@ -2,9 +2,11 @@ package com.cognixia.application.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -44,12 +46,13 @@ public class LoginController {
 	}
 
 	// POSTING METHODS
-
+	
+	@CrossOrigin(origins = "http://localhost:3000")
 	@PostMapping(path = "/user/add")
-	public @ResponseBody String addNewUser(@RequestParam String firstName, @RequestParam String lastName,
+	public @ResponseBody String addNewUser(/*@RequestParam String firstName, @RequestParam String lastName,
 			@RequestParam String address, @RequestParam String contactNum, @RequestParam String password,
-			@RequestParam float initialDeposit) {
-
+			@RequestParam float initialDeposit*/ @RequestBody User user) {
+		System.out.println(user);
 		/*
 		 * User n = new User();
 		 * 
@@ -57,10 +60,10 @@ public class LoginController {
 		 * n.setContactNum(contactNum); n.setPassword(password);
 		 * n.setInitialDeposit(initialDeposit);
 		 */
-		 
 		
-		if(lService.passWordValidation(password) && lService.phoneValidation(contactNum)) {
-			userRepo.save(new User(0, firstName, lastName, address, contactNum, password, initialDeposit));
+		if(/*lService.passWordValidation(user.getPassword())&&*/ lService.phoneValidation(user.getContactNum())) {
+			userRepo.save(new User(0, user.getFirstName(), user.getLastName(), user.getAddress(), user.getContactNum(), user.getPassword(), 0));
+			//Inform user of ID num
 			return "User added";
 		}
 		
@@ -71,11 +74,11 @@ public class LoginController {
 	// redirectView used to redirect to the bank controller
 	//redirectAttributes is used to redirect the model to the bank controller
 	@PostMapping("/login")
-	public @ResponseBody RedirectView loginSuccess(@ModelAttribute ModelMap model, @RequestParam int userId,
-			@RequestParam String userPass, RedirectAttributes red) {
+	public @ResponseBody RedirectView loginSuccess(@ModelAttribute ModelMap model,/* @RequestParam int userId,
+			@RequestParam String userPass,*/ @RequestBody User user, RedirectAttributes red) {
 
 		// model is updated in the login service
-		if (lService.loginVerify(model, userId, userPass)) {
+		if (lService.loginVerify(model, user.getUserId(), user.getPassword())) {
 			System.out.println("model inside controller is " + model);
 			red.addFlashAttribute("user", model.getAttribute("user"));
 			System.out.println("red is " + red);
