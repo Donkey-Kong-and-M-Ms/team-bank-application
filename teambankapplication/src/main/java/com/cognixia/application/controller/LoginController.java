@@ -49,14 +49,6 @@ public class LoginController {
 	public @ResponseBody String addNewUser(@RequestParam String firstName, @RequestParam String lastName,
 			@RequestParam String address, @RequestParam String contactNum, @RequestParam String password,
 			@RequestParam float initialDeposit) {
-
-		/*
-		 * User n = new User();
-		 * 
-		 * n.setFirstName(firstName); n.setLastName(lastName); n.setAddress(address);
-		 * n.setContactNum(contactNum); n.setPassword(password);
-		 * n.setInitialDeposit(initialDeposit);
-		 */
 		 
 		
 		if(lService.passWordValidation(password) && lService.phoneValidation(contactNum)) {
@@ -64,7 +56,6 @@ public class LoginController {
 			return "User added";
 		}
 		
-		//userRepo.save(n);
 		return "User already exists";
 	}
 
@@ -76,9 +67,7 @@ public class LoginController {
 
 		// model is updated in the login service
 		if (lService.loginVerify(model, userId, userPass)) {
-			System.out.println("model inside controller is " + model);
 			red.addFlashAttribute("user", model.getAttribute("user"));
-			System.out.println("red is " + red);
 			return new RedirectView("/bank/mainPage", true);
 		}
 		return new RedirectView("/login/login", false);

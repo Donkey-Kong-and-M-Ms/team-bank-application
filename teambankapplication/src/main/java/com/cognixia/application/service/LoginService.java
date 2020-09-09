@@ -31,7 +31,6 @@ public class LoginService {
 
 		}
 		return false;
-
 	}
 
 	// password validation
@@ -44,18 +43,27 @@ public class LoginService {
 		} else
 			return false;
 	}
-	
+
 	// validation for phone number
-		public boolean phoneValidation(String contactNum) {
+	public boolean phoneValidation(String contactNum) {
 
-			// checks to see if there is a format of (XXX)XXX-XXXX
-			if (contactNum.matches("\\(\\d{3}\\)-\\d{3}-\\d{4}")) {
+		// checks to see if there is a format of (XXX)XXX-XXXX
+		if (contactNum.matches("\\(\\d{3}\\)-\\d{3}-\\d{4}")) {
 
-				return true;
-			} else {
-				return false;
-			}
-
+			return true;
+		} else {
+			return false;
 		}
+
+	}
+
+	public boolean isUserLoggedOut(ModelMap model) {
+
+		if (model.isEmpty()) {
+
+			return true;
+		}
+		return false;
+	}
 
 }
