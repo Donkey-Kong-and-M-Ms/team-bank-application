@@ -2,14 +2,11 @@ package com.cognixia.application.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import org.springframework.stereotype.Component;
 
 import com.cognixia.application.model.Account;
-import com.cognixia.application.model.User;
 
 @Component
 public class AccountDaoImpl implements AccountDao {
@@ -25,7 +22,7 @@ public class AccountDaoImpl implements AccountDao {
 	// may need to remove the " jdbc:mysql: " portion
 	private static final String URL = "jdbc:mysql:team-bank-database.c7lmsujwlyzy.us-east-2.rds.amazonaws.com";
 	private static final String USERNAME = "root";
-	private static final String PASSWORD = "Password#1";
+	private static final String PASSWORD = "root"; //Password#1
 
 	Connection conn;
 	PreparedStatement stmt;
@@ -35,7 +32,7 @@ public class AccountDaoImpl implements AccountDao {
 		Connection conn = null;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", USERNAME, PASSWORD);
 
 			return conn;
 

@@ -89,7 +89,6 @@ public class User {
 	public void setInitialDeposit(float initialDeposit) {
 		this.initialDeposit = initialDeposit;
 	}
-
 	public User(Integer userId, String firstName, String lastName, String address, String contactNum, String password,
 			float initialDeposit) {
 		super();

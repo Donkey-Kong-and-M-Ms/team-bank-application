@@ -37,10 +37,18 @@ public class LoginService {
 		return InputValidationUtil.validPassword(password);
 		
 	}
-	
+
 	// validation for phone number
 	public boolean phoneValidation(String contactNum) {
 		return InputValidationUtil.validPhoneNum(contactNum);
+	}
+
+	public boolean isUserLoggedOut(ModelMap model) {
+
+		if (model.isEmpty()) {
+
+			return true;
+		return false;
 	}
 
 }
