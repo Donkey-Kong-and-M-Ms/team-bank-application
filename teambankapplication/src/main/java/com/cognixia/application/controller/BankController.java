@@ -176,13 +176,15 @@ public class BankController {
 
 	@PostMapping("/deposit")
 	public @ResponseBody String depositSuccess(
-//			ModelMap model, 
-			@RequestParam int userid,
+			ModelMap model, 
+//			@RequestParam int userid,
 			@RequestParam float amount,
 			@RequestParam String accountType) {
 
 		// create user instance that we can work with
-//		User loggedUser = (User) model.getAttribute("user");
+		User loggedUser = (User) model.getAttribute("user");
+		
+		int userid = loggedUser.getUserId();
 
 		/*
 		 * // using the user object to get a user id int userId =
@@ -209,7 +211,7 @@ public class BankController {
 		if(bank.deposit(userid, amount, accountType)) {
 			return SuccessUtil.successDeposit();
 		} else {
-			return ErrorUtil.errorNotPositive();
+			return ErrorUtil.errorDepositFailed();
 		}
 //		bank.deposit(loggedUser.getUserId(), amount, accountType);
 
@@ -292,50 +294,64 @@ public class BankController {
 	}
 
 	@PostMapping("/withdraw")
-	public @ResponseBody String withdrawSuccess(ModelMap model, @RequestParam float amount,
+	public @ResponseBody String withdrawSuccess(
+			ModelMap model, 
+//			@RequestParam int userid,
+			@RequestParam float amount,
 			@RequestParam String accountType) {
 
 		// create user instance that we can work with
 		User loggedUser = (User) model.getAttribute("user");
 
 		// using the user object to get a user id
-		int userId = loggedUser.getUserId();
-
-		// grabs the account where userId and accountType match
-		Account acc = accDaoImpl.getAccountByUserIdAndAccountType(userId, accountType);
-
-		// using the user id to connect to an account id (to be used for transactions)
-		int accId = acc.getAccountId();
-
-		// sets up a local var balance to mock the balance in the account
-		userBalance = acc.getBalance();
-
-		// deposits amount
-		userBalance = bank.withdraw(userBalance, amount);
-
-		// push new balance to DB
-		accDaoImpl.updateBalance(userBalance, accId);
-
-		// create a timestamp and push to transaction history for user
-		transactionRepo.save(new Transaction(0, userId, "Withdraw of " + amount));
-
+		int userid = loggedUser.getUserId();
+//
+//		// grabs the account where userId and accountType match
+//		Account acc = accDaoImpl.getAccountByUserIdAndAccountType(userId, accountType);
+//
+//		// using the user id to connect to an account id (to be used for transactions)
+//		int accId = acc.getAccountId();
+//
+//		// sets up a local var balance to mock the balance in the account
+//		userBalance = acc.getBalance();
+//
+//		// deposits amount
+//		userBalance = bank.withdraw(userBalance, amount);
+//
+//		// push new balance to DB
+//		accDaoImpl.updateBalance(userBalance, accId);
+//
+//		// create a timestamp and push to transaction history for user
+//		transactionRepo.save(new Transaction(0, userId, "Withdraw of " + amount));
+		
+		if(bank.withdraw(userid, amount, accountType)) {
 		// return strings in the form of JSX
-		return "depositSuccess"; // return front end page if deposit is updated successfully
+			return SuccessUtil.successWithdraw(); // return front end page if deposit is updated successfully
+		} else {
+			return ErrorUtil.errorWithdrawFailed();
+		}
 	}
 
 	@PostMapping("/fundTransfer")
-	public @ResponseBody String fundTransferSuccess(ModelMap model, @RequestParam int receiverId,
-			@RequestParam float amount, @RequestParam String userAccountType, @RequestParam String recAccountType) {
+	public @ResponseBody String fundTransferSuccess(
+			ModelMap model, 
+//			@RequestParam int userId,
+			@RequestParam int receiverId,
+			@RequestParam float amount, 
+			@RequestParam String userAccountType, 
+			@RequestParam String recAccountType) {
 
 		// create user instance that we can work with
 		User loggedUser = (User) model.getAttribute("user");
 
 		// this receiving user is not needed since methods executed below grab the
 		// balance directly
-		User recUser = userDaoImpl.findUserById(receiverId);
+//		User recUser = userDaoImpl.findUserById(receiverId);
 
 		// using the user object to get a user id
 		int userId = loggedUser.getUserId();
+		
+		/*
 
 		Account acc = accDaoImpl.getAccountByUserIdAndAccountType(userId, userAccountType);
 		Account recAcc = accDaoImpl.getAccountByUserIdAndAccountType(receiverId, recAccountType);
@@ -361,9 +377,16 @@ public class BankController {
 				"Transfer of " + amount + " to " + recUser.getFirstName() + " " + recUser.getLastName());
 		bank.addHistory(receiverId,
 				"Transfer of " + amount + " from " + loggedUser.getFirstName() + " " + loggedUser.getLastName());
+		*/
 
-		// return strings in the form of JSX
-		return "fundTransferSuccess";
+		if(bank.transfer(userId, receiverId, amount, userAccountType, recAccountType)) {
+			return SuccessUtil.successTransfer();
+		} else {
+			return ErrorUtil.errorTransferFailed();
+		}
+		
+//		// return strings in the form of JSX
+//		return "fundTransferSuccess";
 	}
 
 	// Get account by account ID

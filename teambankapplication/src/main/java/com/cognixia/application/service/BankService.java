@@ -2,6 +2,7 @@ package com.cognixia.application.service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,15 +69,40 @@ public class BankService {
 			// create a timestamp and push to transaction history for user
 			// transactionRepo.save(new Transaction(0, userId, "Deposit of " + amount));
 
-			Account acc = accountRepo.findByAccountTypeAndUserUserId(accountType, userid).get();
+			try {
+				Account acc = accountRepo.findByAccountTypeAndUserUserId(accountType, userid).get();
 
-			if(InputValidationUtil.positiveNumber(amount)) {
-				acc.deposit(amount);
-				accountRepo.save(acc);
+				if(InputValidationUtil.positiveNumber(amount)) {
+					acc.deposit(amount);
+					accountRepo.save(acc);
 
-				addNewTransaction(userid, TransactionUtil.deposit(amount, accountType));
-				return true;
-			} else {
+					addNewTransaction(userid, TransactionUtil.deposit(amount, accountType));
+					return true;
+				} else {
+					return false;
+				}
+			} catch (NoSuchElementException nse) {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean withdraw(int userid, float amount, String accountType) {
+		if(InputValidationUtil.validAccountType(accountType)) {
+			try {
+				Account acc = accountRepo.findByAccountTypeAndUserUserId(accountType, userid).get();
+				if(InputValidationUtil.positiveNumber(amount) && InputValidationUtil.sufficientFunds(amount, acc)) {
+					acc.withdraw(amount);
+					accountRepo.save(acc);
+
+					addNewTransaction(userid, TransactionUtil.withdraw(amount, accountType));
+					return true;
+				} else {
+					return false;
+				}
+			} catch (NoSuchElementException nse) {
 				return false;
 			}
 		} else {
@@ -84,14 +110,43 @@ public class BankService {
 		}
 	}
 
-	// since IDs are auto-generated, dont need as params
-	// full params listed (int userId, String description)
-	public void addHistory(int id, String description) {
-		Date timestamp = new java.util.Date();
+	public boolean transfer(int giveUserid, int receiveUserid, float amount, String giveAccountType, String receiveAccountType) {
+		if(InputValidationUtil.userExists(receiveUserid, userRepo)) {
+			if(InputValidationUtil.validAccountType(giveAccountType) && InputValidationUtil.validAccountType(receiveAccountType)) {
+				try {
+					Account giveAcc = accountRepo.findByAccountTypeAndUserUserId(giveAccountType, giveUserid).get();
+					Account receiveAcc = accountRepo.findByAccountTypeAndUserUserId(receiveAccountType, receiveUserid).get();
+					if(InputValidationUtil.positiveNumber(amount) && InputValidationUtil.sufficientFunds(amount, giveAcc)) {
+						giveAcc.withdraw(amount);
+						accountRepo.save(giveAcc);
+						addNewTransaction(giveUserid, TransactionUtil.giveTransfer(amount, receiveAccountType));
 
-		transactionRepo.save(new Transaction(0, id, description + " @ " + sdf.format(timestamp)));
+						receiveAcc.deposit(amount);
+						accountRepo.save(receiveAcc);
+						addNewTransaction(receiveUserid, TransactionUtil.receiveTransfer(amount, giveAccountType));
 
+						return true;
+					} else {
+						return false;
+					}
+				} catch (NoSuchElementException nse) {
+					return false;
+				}
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
 	}
+//	// since IDs are auto-generated, dont need as params
+//	// full params listed (int userId, String description)
+//	public void addHistory(int id, String description) {
+//		Date timestamp = new java.util.Date();
+//
+//		transactionRepo.save(new Transaction(0, id, description + " @ " + sdf.format(timestamp)));
+//
+//	}
 
 	public boolean accountValidation(String accountName) {
 		return InputValidationUtil.validAccountType(accountName);

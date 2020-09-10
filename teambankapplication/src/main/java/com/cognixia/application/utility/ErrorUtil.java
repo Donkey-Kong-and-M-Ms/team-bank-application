@@ -3,11 +3,11 @@ package com.cognixia.application.utility;
 public class ErrorUtil {
 	
 	public static String errorNotEnough() {
-		return "Transaction failed: Not enough in balance";
+		return "Not enough in balance";
 	}
 	
 	public static String errorNotPositive() {
-		return "Transaction failed: Number input was not positive number";
+		return "Number input was not positive number";
 	}
 	
 	public static String errorNotPhone() {
@@ -28,6 +28,18 @@ public class ErrorUtil {
 	
 	public static String errorAccountNotFound() {
 		return "No account found";
+	}
+	
+	public static String errorDepositFailed() {
+		return "Deposit failed";
+	}
+	
+	public static String errorWithdrawFailed() {
+		return "Withdraw failed";
+	}
+	
+	public static String errorTransferFailed() {
+		return "Transfer failed";
 	}
 
 }
