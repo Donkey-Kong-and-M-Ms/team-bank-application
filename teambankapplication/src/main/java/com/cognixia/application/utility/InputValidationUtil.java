@@ -73,7 +73,7 @@ public class InputValidationUtil {
 
 	
 	public static boolean validAccountType(String accountType) {
-		if (accountType.equalsIgnoreCase("Checking") | accountType.equalsIgnoreCase("Savings")) {
+		if (accountType.equalsIgnoreCase("Checkings") | accountType.equalsIgnoreCase("Savings")) {
 			return true;
 		} else {
 			return false;

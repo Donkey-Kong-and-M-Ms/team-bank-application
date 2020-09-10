@@ -25,5 +25,9 @@ public class ErrorUtil {
 	public static String errorUserNotFound() {
 		return "No user found with that ID";
 	}
+	
+	public static String errorAccountNotFound() {
+		return "No account found";
+	}
 
 }

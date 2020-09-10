@@ -21,6 +21,7 @@ import com.cognixia.application.model.User;
 import com.cognixia.application.repository.AccountRepository;
 import com.cognixia.application.repository.TransactionRepository;
 import com.cognixia.application.repository.UserRepository;
+import com.cognixia.application.utility.ErrorUtil;
 import com.cognixia.application.utility.SuccessUtil;
 import com.cognixia.application.utility.TransactionUtil;
 import com.cognixia.application.service.BankService;
@@ -110,12 +111,12 @@ public class BankController {
 	public @ResponseBody String registerUser(@RequestParam String firstName, @RequestParam String lastName,
 			@RequestParam String address, @RequestParam String contactNum, @RequestParam String password,
 			@RequestParam float initialDeposit, @RequestParam String accountType) {
-		addNewUser(firstName, lastName, address, contactNum, password);
+		bank.addNewUser(firstName, lastName, address, contactNum, password);
 
 		Integer userId = userRepo.getOne((int) userRepo.count()).getUserId();
 
-		addNewAccount(userId, accountType, initialDeposit);
-		addNewTransaction(userId, TransactionUtil.register(initialDeposit, firstName + " " + lastName));
+		bank.addNewAccount(userId, accountType, initialDeposit);
+		bank.addNewTransaction(userId, TransactionUtil.register(initialDeposit, firstName + " " + lastName));
 
 		return SuccessUtil.successRegister();
 	}
@@ -125,13 +126,7 @@ public class BankController {
 	public @ResponseBody String addNewUser(@RequestParam String firstName, @RequestParam String lastName,
 			@RequestParam String address, @RequestParam String contactNum, @RequestParam String password) {
 
-		User newUser = new User();
-		newUser.setFirstName(firstName);
-		newUser.setLastName(lastName);
-		newUser.setAddress(address);
-		newUser.setContactNum(contactNum);
-		newUser.setPassword(password);
-		userRepo.save(newUser);
+		bank.addNewUser(firstName, lastName, address, contactNum, password);
 		return "Saved User";
 	}
 
@@ -153,11 +148,7 @@ public class BankController {
 	public @ResponseBody String addNewAccount(@RequestParam int userId, @RequestParam String accountType,
 			@RequestParam float balance) {
 
-		Account newAccount = new Account();
-		newAccount.setUser(userId);
-		newAccount.setAccountType(accountType);
-		newAccount.setBalance(balance);
-		accountRepo.save(newAccount);
+		bank.addNewAccount(userId, accountType, balance);
 		return "Saved Account";
 	}
 
@@ -184,36 +175,46 @@ public class BankController {
 	 */
 
 	@PostMapping("/deposit")
-	public @ResponseBody String depositSuccess(ModelMap model, @RequestParam float amount,
+	public @ResponseBody String depositSuccess(
+//			ModelMap model, 
+			@RequestParam int userid,
+			@RequestParam float amount,
 			@RequestParam String accountType) {
 
 		// create user instance that we can work with
-		User loggedUser = (User) model.getAttribute("user");
+//		User loggedUser = (User) model.getAttribute("user");
 
-		// using the user object to get a user id
-		int userId = loggedUser.getUserId();
-
-		// grabs the account where userId and accountType match
-		Account acc = accDaoImpl.getAccountByUserIdAndAccountType(userId, accountType);
-
-		// using the user id to connect to an account id (to be used for transactions)
-		int accId = acc.getAccountId();
-
-		// sets up a local var balance to mock the balance in the account
-		userBalance = acc.getBalance();
-
-		// deposits amount
-		userBalance = bank.deposit(userBalance, amount);
-
-		// push new balance to DB
-		accDaoImpl.updateBalance(userBalance, accId);
-
-		// create a timestamp and push to transaction history for user
-		// transactionRepo.save(new Transaction(0, userId, "Deposit of " + amount));
-		bank.addHistory(userId, "Deposit of " + amount);
+		/*
+		 * // using the user object to get a user id int userId =
+		 * loggedUser.getUserId();
+		 * 
+		 * // grabs the account where userId and accountType match Account acc =
+		 * accDaoImpl.getAccountByUserIdAndAccountType(userId, accountType);
+		 * 
+		 * // using the user id to connect to an account id (to be used for
+		 * transactions) int accId = acc.getAccountId();
+		 * 
+		 * // sets up a local var balance to mock the balance in the account userBalance
+		 * = acc.getBalance();
+		 * 
+		 * // deposits amount userBalance = bank.deposit(userBalance, amount);
+		 * 
+		 * // push new balance to DB accDaoImpl.updateBalance(userBalance, accId);
+		 * 
+		 * // create a timestamp and push to transaction history for user //
+		 * transactionRepo.save(new Transaction(0, userId, "Deposit of " + amount));
+		 * bank.addHistory(userId, "Deposit of " + amount);
+		 */
+		
+		if(bank.deposit(userid, amount, accountType)) {
+			return SuccessUtil.successDeposit();
+		} else {
+			return ErrorUtil.errorNotPositive();
+		}
+//		bank.deposit(loggedUser.getUserId(), amount, accountType);
 
 		// return strings in the form of JSX
-		return "depositSuccess"; // return front end page if deposit is updated successfully
+//		return "depositSuccess"; // return front end page if deposit is updated successfully
 	}
 
 	// Withdraw from account
@@ -376,10 +377,7 @@ public class BankController {
 	@PostMapping(path = "/transaction/add")
 	public @ResponseBody String addNewTransaction(@RequestParam int userId, @RequestParam String description) {
 
-		Transaction newTransaction = new Transaction();
-		newTransaction.setUser(userId);
-		newTransaction.setDescription(description);
-		transactionRepo.save(newTransaction);
+		bank.addNewTransaction(userId, description);
 		return "Saved Transaction";
 	}
 
