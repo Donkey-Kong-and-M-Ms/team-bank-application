@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.cognixia.application.dao.AccountDaoImpl;
 import com.cognixia.application.model.Account;
@@ -14,6 +15,7 @@ import com.cognixia.application.model.User;
 import com.cognixia.application.repository.AccountRepository;
 import com.cognixia.application.repository.TransactionRepository;
 import com.cognixia.application.repository.UserRepository;
+import com.cognixia.application.utility.ErrorUtil;
 import com.cognixia.application.utility.InputValidationUtil;
 import com.cognixia.application.utility.SuccessUtil;
 import com.cognixia.application.utility.TransactionUtil;
@@ -139,6 +141,27 @@ public class BankService {
 			return false;
 		}
 	}
+	
+	public boolean register( String firstName, String lastName,
+			 String address, String contactNum, String password,
+			 float initialDeposit, String accountType) {
+		
+		if(InputValidationUtil.validAccountType(accountType) && InputValidationUtil.positiveNumber(initialDeposit)) {
+			if(InputValidationUtil.validPassword(password) && InputValidationUtil.validPhoneNum(contactNum)) {
+				addNewUser(firstName, lastName, address, contactNum, password);
+				
+				Integer userId = userRepo.getOne((int) userRepo.count()).getUserId();
+
+				addNewAccount(userId, accountType, initialDeposit);
+				addNewTransaction(userId, TransactionUtil.register(initialDeposit, firstName + " " + lastName));
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
 //	// since IDs are auto-generated, dont need as params
 //	// full params listed (int userId, String description)
 //	public void addHistory(int id, String description) {
@@ -152,14 +175,19 @@ public class BankService {
 		return InputValidationUtil.validAccountType(accountName);
 	}
 	
-	public void addNewUser(String firstName, String lastName, String address, String contactNum, String password) {
-		User newUser = new User();
-		newUser.setFirstName(firstName);
-		newUser.setLastName(lastName);
-		newUser.setAddress(address);
-		newUser.setContactNum(contactNum);
-		newUser.setPassword(password);
-		userRepo.save(newUser);
+	public boolean addNewUser(String firstName, String lastName, String address, String contactNum, String password) {
+		if(InputValidationUtil.validPassword(password) && InputValidationUtil.validPhoneNum(contactNum)) {
+			User newUser = new User();
+			newUser.setFirstName(firstName);
+			newUser.setLastName(lastName);
+			newUser.setAddress(address);
+			newUser.setContactNum(contactNum);
+			newUser.setPassword(password);
+			userRepo.save(newUser);
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	public void addNewAccount(int userid, String accountType, float balance) {

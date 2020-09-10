@@ -111,14 +111,21 @@ public class BankController {
 	public @ResponseBody String registerUser(@RequestParam String firstName, @RequestParam String lastName,
 			@RequestParam String address, @RequestParam String contactNum, @RequestParam String password,
 			@RequestParam float initialDeposit, @RequestParam String accountType) {
-		bank.addNewUser(firstName, lastName, address, contactNum, password);
-
-		Integer userId = userRepo.getOne((int) userRepo.count()).getUserId();
-
-		bank.addNewAccount(userId, accountType, initialDeposit);
-		bank.addNewTransaction(userId, TransactionUtil.register(initialDeposit, firstName + " " + lastName));
-
-		return SuccessUtil.successRegister();
+		
+		if(bank.register(firstName, lastName, address, contactNum, password, initialDeposit, accountType)) {
+			return SuccessUtil.successRegister();
+		} else {
+			return ErrorUtil.errorRegisterFailed();
+		}
+		
+//		bank.addNewUser(firstName, lastName, address, contactNum, password);
+//
+//		Integer userId = userRepo.getOne((int) userRepo.count()).getUserId();
+//
+//		bank.addNewAccount(userId, accountType, initialDeposit);
+//		bank.addNewTransaction(userId, TransactionUtil.register(initialDeposit, firstName + " " + lastName));
+//
+//		return SuccessUtil.successRegister();
 	}
 
 	// Add new user

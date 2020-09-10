@@ -41,5 +41,13 @@ public class ErrorUtil {
 	public static String errorTransferFailed() {
 		return "Transfer failed";
 	}
+	
+	public static String errorRegisterFailed() {
+		return "Register failed";
+	}
+	
+	public static String errorAccountCreationFailed() {
+		return "Account creation failed";
+	}
 
 }
