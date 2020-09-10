@@ -48,11 +48,12 @@ public class LoginService {
 	// validation for phone number
 		public boolean phoneValidation(String contactNum) {
 
-			// checks to see if there is a format of (XXX)XXX-XXXX
+			// checks to see if there is a format of (XXX)-XXX-XXXX
 			if (contactNum.matches("\\(\\d{3}\\)-\\d{3}-\\d{4}")) {
-
+				System.out.println("True");
 				return true;
 			} else {
+				System.out.println("false");
 				return false;
 			}
 

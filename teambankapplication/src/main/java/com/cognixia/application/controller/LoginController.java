@@ -46,7 +46,6 @@ public class LoginController {
 	}
 
 	// POSTING METHODS
-	
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PostMapping(path = "/user/add")
 	public @ResponseBody String addNewUser(/*@RequestParam String firstName, @RequestParam String lastName,
@@ -62,6 +61,7 @@ public class LoginController {
 		 */
 		
 		if(/*lService.passWordValidation(user.getPassword())&&*/ lService.phoneValidation(user.getContactNum())) {
+			System.out.println("Run");
 			userRepo.save(new User(0, user.getFirstName(), user.getLastName(), user.getAddress(), user.getContactNum(), user.getPassword(), 0));
 			//Inform user of ID num
 			return "User added";
@@ -73,8 +73,9 @@ public class LoginController {
 
 	// redirectView used to redirect to the bank controller
 	//redirectAttributes is used to redirect the model to the bank controller
+	@CrossOrigin(origins = "http://localhost:3000")
 	@PostMapping("/login")
-	public @ResponseBody RedirectView loginSuccess(@ModelAttribute ModelMap model,/* @RequestParam int userId,
+	public @ResponseBody /*RedirectView*/ String loginSuccess(@ModelAttribute ModelMap model,/* @RequestParam int userId,
 			@RequestParam String userPass,*/ @RequestBody User user, RedirectAttributes red) {
 
 		// model is updated in the login service
@@ -82,9 +83,11 @@ public class LoginController {
 			System.out.println("model inside controller is " + model);
 			red.addFlashAttribute("user", model.getAttribute("user"));
 			System.out.println("red is " + red);
-			return new RedirectView("/bank/mainPage", true);
+			//return new RedirectView("/bank/mainPage", true);
+			return "Login Success";
 		}
-		return new RedirectView("/login/login", false);
+		//return new RedirectView("/login/login", false);
+		return "Login Failed";
 	}
 
 }
