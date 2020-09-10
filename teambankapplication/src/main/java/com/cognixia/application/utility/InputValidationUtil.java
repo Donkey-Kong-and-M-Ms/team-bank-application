@@ -40,7 +40,7 @@ public class InputValidationUtil {
 	
 	public static boolean validPhoneNum(String phoneNum) {
 		// checks to see if there is a format of (XXX)XXX-XXXX
-		if (phoneNum.matches("\\(\\d{3}\\)-\\d{3}-\\d{4}")) {
+		if (phoneNum.matches("\\(\\d{3}\\)\\d{3}-\\d{4}")) {
 			return true;
 		} else {
 			return false;
@@ -51,7 +51,7 @@ public class InputValidationUtil {
 	// criteria - at least: 1 number, 1 lower case, 1 upper case, 1 special
 	// character, 8-30 characters long
 	public static boolean validPassword(String password) {
-		if (password.matches("?=.*[a-z])(?=.*\\d)(?=.*[A-Z])(?=.*[@#$%!*]).{8,30}")) {
+		if (password.matches("(?=.*[a-z])(?=.*\\d)(?=.*[A-Z])(?=.*[@#$%!*]).{8,30}")) {
 			return true;
 		} else
 			return false;
