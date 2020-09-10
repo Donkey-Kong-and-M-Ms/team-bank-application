@@ -44,7 +44,6 @@ public class LoginController {
 
 	// POSTING METHODS
 
-<<<<<<< HEAD
 	/*
 	 * @PostMapping(path = "/user/add") public @ResponseBody String
 	 * addNewUser(@RequestParam String firstName, @RequestParam String lastName,
@@ -69,21 +68,6 @@ public class LoginController {
 	 * 
 	 * //userRepo.save(n); return "User already exists"; }
 	 */
-=======
-	@PostMapping(path = "/user/add")
-	public @ResponseBody String addNewUser(@RequestParam String firstName, @RequestParam String lastName,
-			@RequestParam String address, @RequestParam String contactNum, @RequestParam String password,
-			@RequestParam float initialDeposit) {
-		 
-		
-		if(lService.passWordValidation(password) && lService.phoneValidation(contactNum)) {
-			userRepo.save(new User(0, firstName, lastName, address, contactNum, password, initialDeposit));
-			return "User added";
-		}
-		
-		return "User already exists";
-	}
->>>>>>> a0ae22962a001d0ccfcf94d792ce5bf6215cdd3e
 
 	// redirectView used to redirect to the bank controller
 	// redirectAttributes is used to redirect the model to the bank controller

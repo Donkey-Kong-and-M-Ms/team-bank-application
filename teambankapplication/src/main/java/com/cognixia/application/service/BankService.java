@@ -7,13 +7,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cognixia.application.dao.AccountDaoImpl;
+import com.cognixia.application.model.Account;
 import com.cognixia.application.model.Transaction;
+import com.cognixia.application.repository.AccountRepository;
 import com.cognixia.application.repository.TransactionRepository;
+import com.cognixia.application.repository.UserRepository;
 import com.cognixia.application.utility.InputValidationUtil;
 
 @Service
 public class BankService {
 
+	@Autowired
+	UserRepository userRepo;
+	
+	@Autowired
+	AccountRepository accountRepo;
+	
 	@Autowired
 	TransactionRepository transactionRepo;
 
@@ -45,6 +54,21 @@ public class BankService {
 
 	public boolean accountValidation(String accountName) {
 		return InputValidationUtil.validAccountType(accountName);
+	}
+	
+	public void addNewAccount(int userid, String accountType, float balance) {
+		Account newAccount = new Account();
+		newAccount.setUser(userid);
+		newAccount.setAccountType(accountType);
+		newAccount.setBalance(balance);
+		accountRepo.save(newAccount);
+	}
+	
+	public void addNewTransaction(int userid, String description) {
+		Transaction newTransaction = new Transaction();
+		newTransaction.setUser(userid);
+		newTransaction.setDescription(description);
+		transactionRepo.save(newTransaction);
 	}
 
 }

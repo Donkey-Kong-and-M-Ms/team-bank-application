@@ -34,16 +34,7 @@ public class LoginService {
 	// criteria - at least: 1 number, 1 lower case, 1 upper case, 1 special
 	// character, 8-30 characters long
 	public boolean passWordValidation(String password) {
-<<<<<<< HEAD
-
-		if (password.matches("(?=.*[a-z])(?=.*\\d)(?=.*[A-Z])(?=.*[@#$%!*]).{8,30}")) {
-			return true;
-		} else
-			return false;
-=======
 		return InputValidationUtil.validPassword(password);
-		
->>>>>>> a0ae22962a001d0ccfcf94d792ce5bf6215cdd3e
 	}
 
 	// validation for phone number
@@ -56,6 +47,7 @@ public class LoginService {
 		if (model.isEmpty()) {
 
 			return true;
+		}
 		return false;
 	}
 
