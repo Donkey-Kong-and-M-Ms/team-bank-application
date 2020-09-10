@@ -38,38 +38,39 @@ public class LoginController {
 		return "login";
 	}
 
-	@GetMapping("/user/add")
-	public String showRegister() {
-		return "/user/add";
-	}
+	/*
+	 * @GetMapping("/user/add") public String showRegister() { return "/user/add"; }
+	 */
 
 	// POSTING METHODS
 
-	@PostMapping(path = "/user/add")
-	public @ResponseBody String addNewUser(@RequestParam String firstName, @RequestParam String lastName,
-			@RequestParam String address, @RequestParam String contactNum, @RequestParam String password,
-			@RequestParam float initialDeposit) {
-
-		/*
-		 * User n = new User();
-		 * 
-		 * n.setFirstName(firstName); n.setLastName(lastName); n.setAddress(address);
-		 * n.setContactNum(contactNum); n.setPassword(password);
-		 * n.setInitialDeposit(initialDeposit);
-		 */
-		 
-		
-		if(lService.passWordValidation(password) && lService.phoneValidation(contactNum)) {
-			userRepo.save(new User(0, firstName, lastName, address, contactNum, password, initialDeposit));
-			return "User added";
-		}
-		
-		//userRepo.save(n);
-		return "User already exists";
-	}
+	/*
+	 * @PostMapping(path = "/user/add") public @ResponseBody String
+	 * addNewUser(@RequestParam String firstName, @RequestParam String lastName,
+	 * 
+	 * @RequestParam String address, @RequestParam String contactNum, @RequestParam
+	 * String password,
+	 * 
+	 * @RequestParam float initialDeposit) {
+	 * 
+	 * 
+	 * User n = new User();
+	 * 
+	 * n.setFirstName(firstName); n.setLastName(lastName); n.setAddress(address);
+	 * n.setContactNum(contactNum); n.setPassword(password);
+	 * n.setInitialDeposit(initialDeposit);
+	 * 
+	 * 
+	 * 
+	 * if(lService.passWordValidation(password) &&
+	 * lService.phoneValidation(contactNum)) { userRepo.save(new User(0, firstName,
+	 * lastName, address, contactNum, password)); return "User added"; }
+	 * 
+	 * //userRepo.save(n); return "User already exists"; }
+	 */
 
 	// redirectView used to redirect to the bank controller
-	//redirectAttributes is used to redirect the model to the bank controller
+	// redirectAttributes is used to redirect the model to the bank controller
 	@PostMapping("/login")
 	public @ResponseBody RedirectView loginSuccess(@ModelAttribute ModelMap model, @RequestParam int userId,
 			@RequestParam String userPass, RedirectAttributes red) {

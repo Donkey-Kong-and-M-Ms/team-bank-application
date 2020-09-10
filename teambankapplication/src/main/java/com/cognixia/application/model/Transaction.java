@@ -11,7 +11,6 @@ import javax.persistence.ManyToOne;
 public class Transaction {
 
 	@Id
-
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "transaction_id")
 	private Integer transactionId;
@@ -21,8 +20,6 @@ public class Transaction {
   
 	@Column(name = "transaction_description")
 	private String description;
-  
-  private Integer userId;
 
 	public Integer getTransactionId() {
 		return transactionId;
@@ -65,7 +62,7 @@ public class Transaction {
 	public Transaction(Integer transactionId, Integer userId, String description) {
 		super();
 		this.transactionId = transactionId;
-		this.userId = userId;
+		this.user.setUserId(userId);
 		this.description = description;
 	}
 
@@ -75,7 +72,8 @@ public class Transaction {
 
 	@Override
 	public String toString() {
-		return "Transaction [transactionId=" + transactionId + ", userId=" + userId + ", description=" + description
-				+ "]";
+		return "Transaction [transactionId=" + transactionId + ", user=" + user + ", description=" + description + "]";
 	}
+
+	
 }

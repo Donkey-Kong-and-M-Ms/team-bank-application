@@ -23,8 +23,6 @@ public class Account {
 
 	@Column(name = "account_value")
 	private float balance;
-	
-	private int userId;
 
 	public Integer getAccountId() {
 		return accountId;
@@ -73,14 +71,15 @@ public class Account {
 	public Account(Integer accountId, Integer userId, String accountType, float balance) {
 		super();
 		this.accountId = accountId;
-		this.userId = userId;
+		this.user.setUserId(userId);
 		this.accountType = accountType;
 		this.balance = balance;
 	}
 
+
 	@Override
 	public String toString() {
-		return "Account [accountId=" + accountId + ", userId=" + userId + ", accountType=" + accountType + ", balance="
+		return "Account [accountId=" + accountId + ", user=" + user + ", accountType=" + accountType + ", balance="
 				+ balance + "]";
 	}
 

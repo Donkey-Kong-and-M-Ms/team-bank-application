@@ -7,11 +7,11 @@ public class MessageUtil {
 	}
 	
 	public static String passwordCriteria() {
-		return "At least 1 Uppercase, 1 Lowercase, and 1 Special character";
+		return "At least 1 Uppercase, 1 Lowercase, 1 Special character, and between 8-30 characters long";
 	}
 	
 	public static String phoneNumForm() {
-		return "Must be like the following number: 5551234567";
+		return "Must be like the following number: (555)123-4567";
 	}
 
 }

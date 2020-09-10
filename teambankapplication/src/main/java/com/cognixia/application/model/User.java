@@ -31,9 +31,6 @@ public class User {
 	@Column(name = "user_password")
 	private String password;
 
-	@Column(name = "initial_deposit")
-	private float initialDeposit;
-
 	public Integer getUserId() {
 		return userId;
 	}
@@ -82,16 +79,7 @@ public class User {
 		this.password = password;
 	}
 
-	public float getInitialDeposit() {
-		return initialDeposit;
-	}
-
-	public void setInitialDeposit(float initialDeposit) {
-		this.initialDeposit = initialDeposit;
-	}
-
-	public User(Integer userId, String firstName, String lastName, String address, String contactNum, String password,
-			float initialDeposit) {
+	public User(Integer userId, String firstName, String lastName, String address, String contactNum, String password) {
 		super();
 		this.userId = userId;
 		this.firstName = firstName;
@@ -99,7 +87,6 @@ public class User {
 		this.address = address;
 		this.contactNum = contactNum;
 		this.password = password;
-		this.initialDeposit = initialDeposit;
 	}
 
 	public User() {
@@ -109,7 +96,8 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", address=" + address
-				+ ", contactNum=" + contactNum + ", password=" + password + ", initialDeposit=" + initialDeposit + "]";
+				+ ", contactNum=" + contactNum + ", password=" + password + "]";
 	}
+	
 
 }

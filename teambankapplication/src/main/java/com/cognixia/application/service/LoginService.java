@@ -39,7 +39,7 @@ public class LoginService {
 	// character, 8-30 characters long
 	public boolean passWordValidation(String password) {
 
-		if (password.matches("?=.*[a-z])(?=.*\\d)(?=.*[A-Z])(?=.*[@#$%!*]).{8,30}")) {
+		if (password.matches("(?=.*[a-z])(?=.*\\d)(?=.*[A-Z])(?=.*[@#$%!*]).{8,30}")) {
 			return true;
 		} else
 			return false;

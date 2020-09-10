@@ -63,8 +63,7 @@ public class UserDaoImpl implements UserDao {
 
 			while (rs.next()) {
 				user = new User(rs.getInt("user_id"), rs.getString("first_name"), rs.getString("last_name"),
-						rs.getString("address"), rs.getString("contact_number"), rs.getString("user_password"),
-						rs.getFloat("initial_deposit"));
+						rs.getString("address"), rs.getString("contact_number"), rs.getString("user_password"));
 			}
 
 		} catch (Exception e) {
