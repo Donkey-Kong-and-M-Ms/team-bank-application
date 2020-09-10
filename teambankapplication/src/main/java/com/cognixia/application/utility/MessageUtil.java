@@ -7,7 +7,11 @@ public class MessageUtil {
 	}
 	
 	public static String passwordCriteria() {
+<<<<<<< HEAD
 		return "At least 1 Uppercase, 1 Lowercase, 1 Special character, and between 8-30 characters long";
+=======
+		return "At least 1 Uppercase, 1 Lowercase, 1 Special character, and 8-30 characters long";
+>>>>>>> a0ae22962a001d0ccfcf94d792ce5bf6215cdd3e
 	}
 	
 	public static String phoneNumForm() {

@@ -79,7 +79,19 @@ public class User {
 		this.password = password;
 	}
 
+<<<<<<< HEAD
 	public User(Integer userId, String firstName, String lastName, String address, String contactNum, String password) {
+=======
+	public float getInitialDeposit() {
+		return initialDeposit;
+	}
+
+	public void setInitialDeposit(float initialDeposit) {
+		this.initialDeposit = initialDeposit;
+	}
+	public User(Integer userId, String firstName, String lastName, String address, String contactNum, String password,
+			float initialDeposit) {
+>>>>>>> a0ae22962a001d0ccfcf94d792ce5bf6215cdd3e
 		super();
 		this.userId = userId;
 		this.firstName = firstName;
