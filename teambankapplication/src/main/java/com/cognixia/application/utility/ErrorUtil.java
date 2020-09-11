@@ -49,5 +49,9 @@ public class ErrorUtil {
 	public static String errorAccountCreationFailed() {
 		return "Account creation failed";
 	}
+	
+	public static String errorLogoutFailed() {
+		return "Logout failed";
+	}
 
 }

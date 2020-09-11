@@ -98,7 +98,12 @@ public class BankController {
 		return "myAccount";
 	}
 
+	// POST METHODS
+
 	// Add new user
+	// when creating a user, an account will be created by default
+	// An automatic transaction will be entered to reflect the initial amount
+	// deposited
 	@PostMapping(path = "/register")
 	public @ResponseBody String registerUser(@RequestParam String firstName, @RequestParam String lastName,
 			@RequestParam String address, @RequestParam String contactNum, @RequestParam String password,
@@ -111,27 +116,7 @@ public class BankController {
 		}
 	}
 
-	// Add new user
-	@PostMapping(path = "/user/add")
-	public @ResponseBody String addNewUser(@RequestParam String firstName, @RequestParam String lastName,
-			@RequestParam String address, @RequestParam String contactNum, @RequestParam String password) {
-
-		bank.addNewUser(firstName, lastName, address, contactNum, password);
-		return "Saved User";
-	}
-
-	// Add new account
-	@PostMapping(path = "/account/add")
-	public @ResponseBody String addNewAccount(@RequestParam int userId, @RequestParam String accountType,
-			@RequestParam float balance) {
-
-		bank.addNewAccount(userId, accountType, balance);
-		return "Saved Account";
-	}
-
-	// the service for acc validation is dependant on the spelling of the
-	// accountType.
-	// it must be "Checking" or "Savings"
+	// User will get to add another account
 	@PostMapping("/account/addNew")
 	public @ResponseBody String addAnotherAccount(ModelMap model, @RequestParam String accountType,
 			@RequestParam float initialDeposit) {
@@ -148,14 +133,6 @@ public class BankController {
 		return "account already exists with this user";
 	}
 
-	// Add new transaction
-	@PostMapping(path = "/transaction/add")
-	public @ResponseBody String addNewTransaction(@RequestParam int userId, @RequestParam String description) {
-
-		bank.addNewTransaction(userId, description);
-		return "Saved Transaction";
-	}
-
 	@PostMapping("/deposit")
 	public @ResponseBody String depositSuccess(ModelMap model, @RequestParam float amount,
 			@RequestParam String accountType) {
@@ -163,6 +140,7 @@ public class BankController {
 		// create user instance that we can work with
 		User loggedUser = (User) model.getAttribute("user");
 
+		// using the user object to get a user id
 		int userid = loggedUser.getUserId();
 
 		if (bank.deposit(userid, amount, accountType)) {

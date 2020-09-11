@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 
-import java.util.List;
 import java.util.Optional;
 
 import com.cognixia.application.model.User;
@@ -42,7 +41,7 @@ public class LoginService {
 		return InputValidationUtil.validPhoneNum(contactNum);
 	}
 
-	//checks if user is logged out or not
+	// checks if user is logged out or not
 	public boolean isUserLoggedOut(ModelMap model) {
 
 		if (model.isEmpty()) {

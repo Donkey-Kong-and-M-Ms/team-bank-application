@@ -21,5 +21,9 @@ public class SuccessUtil {
 	public static String successLogin() {
 		return "Login successful";
 	}
+	
+	public static String successLogout() {
+		return "Logout successful";
+	}
 
 }

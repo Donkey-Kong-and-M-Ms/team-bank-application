@@ -13,6 +13,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import com.cognixia.application.repository.UserRepository;
 import com.cognixia.application.service.LoginService;
+import com.cognixia.application.utility.ErrorUtil;
+import com.cognixia.application.utility.SuccessUtil;
 
 @RestController
 @RequestMapping(path = "/login") // may need to rename this or the login functions below
@@ -57,10 +59,10 @@ public class LoginController {
 		//this effectively logs the user out
 		if(lService.isUserLoggedOut(model)) {
 			model.clear();
-			return "Logout Success";
+			return SuccessUtil.successLogout();
 		}
 		else {
-			return "Logout Failed";
+			return ErrorUtil.errorLogoutFailed();
 		}
 		
 		

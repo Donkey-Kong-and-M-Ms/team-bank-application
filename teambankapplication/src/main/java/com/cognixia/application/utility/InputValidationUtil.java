@@ -71,7 +71,7 @@ public class InputValidationUtil {
 		return false;
 	}
 
-	// Checks the account names are only "checking" or "savings"
+	// Checks the account names are only "checkings" or "savings"
 	// functionality can be added later for more accounts to be created
 	public static boolean validAccountType(String accountType) {
 		if (accountType.equalsIgnoreCase("Checkings") | accountType.equalsIgnoreCase("Savings")) {

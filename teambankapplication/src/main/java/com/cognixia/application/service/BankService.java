@@ -30,18 +30,6 @@ public class BankService {
 	@Autowired
 	AccountDaoImpl accDaoImpl;
 
-	// deposit method used in Bank controller
-	public float deposit(float balance, float amount) {
-		balance = balance + amount;
-		return balance;
-	}
-
-	// withdraw method used in Bank controller
-	public float withdraw(float balance, float amount) {
-		balance = balance - amount;
-		return balance;
-	}
-
 	public boolean deposit(int userid, float amount, String accountType) {
 
 		if (InputValidationUtil.validAccountType(accountType)) {
