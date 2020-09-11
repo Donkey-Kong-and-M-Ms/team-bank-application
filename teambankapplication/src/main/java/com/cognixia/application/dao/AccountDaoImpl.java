@@ -11,18 +11,15 @@ import com.cognixia.application.model.Account;
 @Component
 public class AccountDaoImpl implements AccountDao {
 
-	// name of DB table may change
 	private static final String UPDATE_BALANCE = "UPDATE DBAccount SET account_value = ? where account_id = ?";
 
 	private static final String ACCOUNT_BY_USER_ID_AND_ACCOUNT_TYPE = "SELECT * FROM DBAccount WHERE user_id = ? AND account_type = ?";
 
 	private static final String ACCOUNT_BALANCE_BY_ACCOUNT_ID = "SELECT account_value FROM DBAccount WHERE account_id = ?";
 
-	// database creds to use with custom(jdbc) methods
-	// may need to remove the " jdbc:mysql: " portion
 	private static final String URL = "jdbc:mysql:team-bank-database.c7lmsujwlyzy.us-east-2.rds.amazonaws.com";
 	private static final String USERNAME = "root";
-	private static final String PASSWORD = "root"; //Password#1
+	private static final String PASSWORD = "root"; // Password#1
 
 	Connection conn;
 	PreparedStatement stmt;

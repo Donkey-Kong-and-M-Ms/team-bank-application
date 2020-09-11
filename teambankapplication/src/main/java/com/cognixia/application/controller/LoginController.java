@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-import com.cognixia.application.model.User;
 import com.cognixia.application.repository.UserRepository;
 import com.cognixia.application.service.LoginService;
 
@@ -24,8 +23,6 @@ public class LoginController {
 	@Autowired
 	UserRepository userRepo;
 
-	// global variables if any
-
 	// GETTING METHODS
 
 	@GetMapping("/index")
@@ -37,37 +34,8 @@ public class LoginController {
 	public String showLogin() {
 		return "login";
 	}
-
-	/*
-	 * @GetMapping("/user/add") public String showRegister() { return "/user/add"; }
-	 */
-
-	// POSTING METHODS
-
-	/*
-	 * @PostMapping(path = "/user/add") public @ResponseBody String
-	 * addNewUser(@RequestParam String firstName, @RequestParam String lastName,
-	 * 
-	 * @RequestParam String address, @RequestParam String contactNum, @RequestParam
-	 * String password,
-	 * 
-	 * @RequestParam float initialDeposit) {
-	 * 
-	 * 
-	 * User n = new User();
-	 * 
-	 * n.setFirstName(firstName); n.setLastName(lastName); n.setAddress(address);
-	 * n.setContactNum(contactNum); n.setPassword(password);
-	 * n.setInitialDeposit(initialDeposit);
-	 * 
-	 * 
-	 * 
-	 * if(lService.passWordValidation(password) &&
-	 * lService.phoneValidation(contactNum)) { userRepo.save(new User(0, firstName,
-	 * lastName, address, contactNum, password)); return "User added"; }
-	 * 
-	 * //userRepo.save(n); return "User already exists"; }
-	 */
+	
+	//POST METHODS
 
 	// redirectView used to redirect to the bank controller
 	// redirectAttributes is used to redirect the model to the bank controller
@@ -81,6 +49,21 @@ public class LoginController {
 			return new RedirectView("/bank/mainPage", true);
 		}
 		return new RedirectView("/login/login", false);
+	}
+	
+	@PostMapping("/logout")
+	public @ResponseBody String logoutSuccess(@ModelAttribute ModelMap model) {
+		
+		//this effectively logs the user out
+		if(lService.isUserLoggedOut(model)) {
+			model.clear();
+			return "Logout Success";
+		}
+		else {
+			return "Logout Failed";
+		}
+		
+		
 	}
 
 }

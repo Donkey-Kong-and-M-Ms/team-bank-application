@@ -3,14 +3,13 @@ package com.cognixia.application.utility;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.ModelMap;
 
 import com.cognixia.application.model.Account;
 import com.cognixia.application.model.User;
 import com.cognixia.application.repository.UserRepository;
 
 public class InputValidationUtil {
-	
+
 	@Autowired
 	UserRepository userRepo;
 
@@ -37,7 +36,7 @@ public class InputValidationUtil {
 			return false;
 		}
 	}
-	
+
 	public static boolean validPhoneNum(String phoneNum) {
 		// checks to see if there is a format of (XXX)XXX-XXXX
 		if (phoneNum.matches("\\(\\d{3}\\)\\d{3}-\\d{4}")) {
@@ -46,7 +45,7 @@ public class InputValidationUtil {
 			return false;
 		}
 	}
-	
+
 	// password validation
 	// criteria - at least: 1 number, 1 lower case, 1 upper case, 1 special
 	// character, 8-30 characters long
@@ -56,9 +55,10 @@ public class InputValidationUtil {
 		} else
 			return false;
 	}
-	
-	// TODO
-	// Requires credential lookup - pass userRepo?
+
+	// iterates through all users and checks whether userName and Password entered
+	// match
+	// an existing user
 	public static boolean validLogin(int userid, String password, UserRepository userRepo) {
 		List<User> uList = (List<User>) userRepo.findAll();
 
@@ -71,7 +71,8 @@ public class InputValidationUtil {
 		return false;
 	}
 
-	
+	// Checks the account names are only "checking" or "savings"
+	// functionality can be added later for more accounts to be created
 	public static boolean validAccountType(String accountType) {
 		if (accountType.equalsIgnoreCase("Checkings") | accountType.equalsIgnoreCase("Savings")) {
 			return true;

@@ -18,8 +18,8 @@ public class LoginService {
 	UserRepository userRepo;
 
 	// code to validate userId (from User) and password - pull from controller
-	public boolean loginVerify(ModelMap model, int userId, String userPass) {		
-		if(InputValidationUtil.validLogin(userId, userPass, userRepo)) {
+	public boolean loginVerify(ModelMap model, int userId, String userPass) {
+		if (InputValidationUtil.validLogin(userId, userPass, userRepo)) {
 			Optional<User> user = userRepo.findById(userId);
 			System.out.println("model prior to putting is " + model);
 			model.addAttribute("user", user.get());
@@ -42,10 +42,10 @@ public class LoginService {
 		return InputValidationUtil.validPhoneNum(contactNum);
 	}
 
+	//checks if user is logged out or not
 	public boolean isUserLoggedOut(ModelMap model) {
 
 		if (model.isEmpty()) {
-
 			return true;
 		}
 		return false;
