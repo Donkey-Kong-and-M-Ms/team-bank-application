@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,6 +47,7 @@ public class BankController {
 
 	// GETTING METHODS
 
+	@CrossOrigin(origins = "http://localhost:3000")
 	@GetMapping("/mainPage")
 	public String showMainPage(ModelMap model, HttpServletRequest request) {
 		Map<String, ?> previousUser = RequestContextUtils.getInputFlashMap(request);
@@ -104,6 +106,7 @@ public class BankController {
 	// when creating a user, an account will be created by default
 	// An automatic transaction will be entered to reflect the initial amount
 	// deposited
+	@CrossOrigin(origins = "http://localhost:3000")
 	@PostMapping(path = "/register")
 	public @ResponseBody String registerUser(@RequestParam String firstName, @RequestParam String lastName,
 			@RequestParam String address, @RequestParam String contactNum, @RequestParam String password,

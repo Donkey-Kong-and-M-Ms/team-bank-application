@@ -26,7 +26,7 @@ public class UserDaoImpl implements UserDao {
 	// may need to remove the " jdbc:mysql: " portion
 	private static final String URL = "jdbc:mysql:team-bank-database.c7lmsujwlyzy.us-east-2.rds.amazonaws.com";
 	private static final String USERNAME = "root";
-	private static final String PASSWORD = "root"; // Password#1
+	private static final String PASSWORD = "password"; // Password#1
 
 	// SQL queries to be used below
 	static final String FIND_USER_BY_ID = "select * from DBUser where user_id=?";
@@ -35,12 +35,12 @@ public class UserDaoImpl implements UserDao {
 		Connection conn = null;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", USERNAME, PASSWORD);
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/groupbank", USERNAME, PASSWORD);
 
 			return conn;
 
 		} catch (Exception e) {
-
+			System.out.println("UserDAO");
 		}
 		return conn;
 	}

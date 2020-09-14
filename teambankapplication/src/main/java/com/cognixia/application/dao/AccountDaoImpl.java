@@ -19,7 +19,7 @@ public class AccountDaoImpl implements AccountDao {
 
 	private static final String URL = "jdbc:mysql:team-bank-database.c7lmsujwlyzy.us-east-2.rds.amazonaws.com";
 	private static final String USERNAME = "root";
-	private static final String PASSWORD = "root"; // Password#1
+	private static final String PASSWORD = "password"; // Password#1
 
 	Connection conn;
 	PreparedStatement stmt;
@@ -29,12 +29,12 @@ public class AccountDaoImpl implements AccountDao {
 		Connection conn = null;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", USERNAME, PASSWORD);
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/groupbank", USERNAME, PASSWORD);
 
 			return conn;
 
 		} catch (Exception e) {
-
+			System.out.println("AccountDAO");
 		}
 		return conn;
 	}
