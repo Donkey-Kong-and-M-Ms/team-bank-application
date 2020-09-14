@@ -30,14 +30,19 @@ public class BankService {
 	@Autowired
 	AccountDaoImpl accDaoImpl;
 
+	// All inputs must be correct to deposit
 	public boolean deposit(int userid, float amount, String accountType) {
-
+		
+		// Check if the account type is a valid one
 		if (InputValidationUtil.validAccountType(accountType)) {
 
+			// Search for the account with the user id and account type
 			try {
 				Account acc = accountRepo.findByAccountTypeAndUserUserId(accountType, userid).get();
 
+				// Check if the amount given is positive
 				if (InputValidationUtil.positiveNumber(amount)) {
+					// Change the account's balance, save to the repository, and add transaction
 					acc.deposit(amount);
 					accountRepo.save(acc);
 
@@ -54,11 +59,19 @@ public class BankService {
 		}
 	}
 
+	// All inputs must be correct to withdraw
 	public boolean withdraw(int userid, float amount, String accountType) {
+		
+		// Check if the account type is a valid one
 		if (InputValidationUtil.validAccountType(accountType)) {
+			
+			// Search for the account with the user id and account type
 			try {
 				Account acc = accountRepo.findByAccountTypeAndUserUserId(accountType, userid).get();
+				
+				// Check if the amount is positive and that the account has enough in the balance
 				if (InputValidationUtil.positiveNumber(amount) && InputValidationUtil.sufficientFunds(amount, acc)) {
+					// Change the account's balance, save to the repository, and add transaction
 					acc.withdraw(amount);
 					accountRepo.save(acc);
 
@@ -75,17 +88,24 @@ public class BankService {
 		}
 	}
 
+	// All inputs must be correct to transfer
 	public boolean transfer(int giveUserid, int receiveUserid, float amount, String giveAccountType,
 			String receiveAccountType) {
+		
+		// Check that the other user exists in the repository
 		if (InputValidationUtil.userExists(receiveUserid, userRepo)) {
-			if (InputValidationUtil.validAccountType(giveAccountType)
-					&& InputValidationUtil.validAccountType(receiveAccountType)) {
+			
+			// Check if both account types are valid
+			if (InputValidationUtil.validAccountType(giveAccountType) && InputValidationUtil.validAccountType(receiveAccountType)) {
+				
+				// Search for the giving and receiving accounts
 				try {
 					Account giveAcc = accountRepo.findByAccountTypeAndUserUserId(giveAccountType, giveUserid).get();
-					Account receiveAcc = accountRepo.findByAccountTypeAndUserUserId(receiveAccountType, receiveUserid)
-							.get();
-					if (InputValidationUtil.positiveNumber(amount)
-							&& InputValidationUtil.sufficientFunds(amount, giveAcc)) {
+					Account receiveAcc = accountRepo.findByAccountTypeAndUserUserId(receiveAccountType, receiveUserid).get();
+					
+					// If the amount is positive and the giving account has enough in the balance
+					if (InputValidationUtil.positiveNumber(amount) && InputValidationUtil.sufficientFunds(amount, giveAcc)) {
+						// Change the account balances, save to the repository, and add transactions to both users
 						giveAcc.withdraw(amount);
 						accountRepo.save(giveAcc);
 						addNewTransaction(giveUserid, TransactionUtil.giveTransfer(amount, receiveAccountType));
@@ -109,15 +129,18 @@ public class BankService {
 		}
 	}
 
+	// Register with the bank, creating a user, account, and transaction
 	public boolean register(String firstName, String lastName, String address, String contactNum, String password,
 			float initialDeposit, String accountType) {
 
+		// Check if the account type is valid and the initial deposit is positive
 		if (InputValidationUtil.validAccountType(accountType) && InputValidationUtil.positiveNumber(initialDeposit)) {
-			if (InputValidationUtil.validPassword(password) && InputValidationUtil.validPhoneNum(contactNum)) {
-				addNewUser(firstName, lastName, address, contactNum, password);
-
+			// Check if a new user can be added with the information
+			if (addNewUser(firstName, lastName, address, contactNum, password)) {
+				// Retrieve the user id that was just added
 				Integer userId = userRepo.getOne((int) userRepo.count()).getUserId();
 
+				// Add new account and transaction related to user id
 				addNewAccount(userId, accountType, initialDeposit);
 				addNewTransaction(userId, TransactionUtil.register(initialDeposit, firstName + " " + lastName));
 				return true;
@@ -129,12 +152,16 @@ public class BankService {
 		}
 	}
 
+	// Check that the account type is valid
 	public boolean accountValidation(String accountName) {
 		return InputValidationUtil.validAccountType(accountName);
 	}
 
+	// Add a new user to the repository
 	public boolean addNewUser(String firstName, String lastName, String address, String contactNum, String password) {
+		// Check that the password fits the criteria and the phone number is in the accepted form
 		if (InputValidationUtil.validPassword(password) && InputValidationUtil.validPhoneNum(contactNum)) {
+			// Create a new user and save to the repository
 			User newUser = new User();
 			newUser.setFirstName(firstName);
 			newUser.setLastName(lastName);
@@ -148,6 +175,7 @@ public class BankService {
 		}
 	}
 
+	// Add a new account to the repository
 	public void addNewAccount(int userid, String accountType, float balance) {
 		Account newAccount = new Account();
 		newAccount.setUser(userid);
@@ -156,6 +184,7 @@ public class BankService {
 		accountRepo.save(newAccount);
 	}
 
+	// Add a new transaction to the repository
 	public void addNewTransaction(int userid, String description) {
 		Transaction newTransaction = new Transaction();
 		newTransaction.setUser(userid);

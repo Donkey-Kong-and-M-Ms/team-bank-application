@@ -133,6 +133,7 @@ public class BankController {
 		return "account already exists with this user";
 	}
 
+	// Deposit to account balance
 	@PostMapping("/deposit")
 	public @ResponseBody String depositSuccess(ModelMap model, @RequestParam float amount,
 			@RequestParam String accountType) {
@@ -143,6 +144,7 @@ public class BankController {
 		// using the user object to get a user id
 		int userid = loggedUser.getUserId();
 
+		// Attempt to deposit
 		if (bank.deposit(userid, amount, accountType)) {
 			return SuccessUtil.successDeposit();
 		} else {
@@ -150,6 +152,7 @@ public class BankController {
 		}
 	}
 
+	// Withdraw from account balance
 	@PostMapping("/withdraw")
 	public @ResponseBody String withdrawSuccess(ModelMap model, @RequestParam float amount,
 			@RequestParam String accountType) {
@@ -160,6 +163,7 @@ public class BankController {
 		// using the user object to get a user id
 		int userid = loggedUser.getUserId();
 
+		// Attempt to withdraw
 		if (bank.withdraw(userid, amount, accountType)) {
 			return SuccessUtil.successWithdraw();
 		} else {
@@ -167,6 +171,7 @@ public class BankController {
 		}
 	}
 
+	// Transfer funds between two accounts
 	@PostMapping("/fundTransfer")
 	public @ResponseBody String fundTransferSuccess(ModelMap model, @RequestParam int receiverId,
 			@RequestParam float amount, @RequestParam String userAccountType, @RequestParam String recAccountType) {
@@ -177,6 +182,7 @@ public class BankController {
 		// using the user object to get a user id
 		int userId = loggedUser.getUserId();
 
+		// Attempt to transfer
 		if (bank.transfer(userId, receiverId, amount, userAccountType, recAccountType)) {
 			return SuccessUtil.successTransfer();
 		} else {

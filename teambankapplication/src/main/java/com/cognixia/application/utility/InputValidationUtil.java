@@ -13,6 +13,7 @@ public class InputValidationUtil {
 	@Autowired
 	UserRepository userRepo;
 
+	// Check that the account has enough funds
 	public static boolean sufficientFunds(float amount, Account account) {
 		if (amount < account.getBalance()) {
 			return true;
@@ -21,6 +22,7 @@ public class InputValidationUtil {
 		}
 	}
 
+	// Check if the given number is positive
 	public static boolean positiveNumber(float amount) {
 		if (amount > 0) {
 			return true;
@@ -29,6 +31,7 @@ public class InputValidationUtil {
 		}
 	}
 
+	// Check if the given user exists in the repository
 	public static boolean userExists(int userid, UserRepository userRepo) {
 		if (userRepo.existsById(userid)) {
 			return true;
