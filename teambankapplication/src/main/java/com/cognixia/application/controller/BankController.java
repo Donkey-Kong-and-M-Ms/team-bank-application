@@ -1,5 +1,7 @@
 package com.cognixia.application.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +21,9 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.cognixia.application.model.Account;
 import com.cognixia.application.model.User;
+import com.cognixia.application.model.Transaction;
 import com.cognixia.application.repository.AccountRepository;
+import com.cognixia.application.repository.TransactionRepository;
 import com.cognixia.application.utility.ErrorUtil;
 import com.cognixia.application.utility.SuccessUtil;
 import com.cognixia.application.service.BankService;
@@ -27,6 +31,7 @@ import com.cognixia.application.dao.AccountDaoImpl;
 import com.cognixia.application.dao.UserDaoImpl;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping(path = "/bank")
 @SessionAttributes("user")
 public class BankController {
@@ -35,6 +40,10 @@ public class BankController {
 	// services, beans, repos
 	@Autowired
 	private AccountRepository accountRepo;
+	
+	@Autowired
+	private TransactionRepository transactionRepo;
+	
 
 	@Autowired
 	BankService bank;
@@ -100,6 +109,23 @@ public class BankController {
 		// page to display
 		return "myAccount";
 	}
+	
+	@GetMapping(path = "/transactions")
+	public @ResponseBody List<Transaction> getAllTransactionsByUserID(@RequestParam int userid) {
+	List<Transaction> transactionsByUserId = new ArrayList<Transaction>();
+	// Loop through all transactions
+	// Add transactions with matching user id to list
+	List<Transaction> list = transactionRepo.findAllByUserUserId(userid);
+	for (int i = list.size(); i > 1 && i > list.size()-5; i--) {
+		transactionsByUserId.add(list.get(i-1));
+	}
+	
+	/*for (Transaction t : transactionRepo.findAllByUserUserId(userid)) {
+	if (t.getUserId().equals(userid)) {
+	transactionsByUserId.add(t); }
+	}*/
+	 return transactionsByUserId;
+	}
 
 	// POST METHODS
 
@@ -124,13 +150,13 @@ public class BankController {
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PostMapping("/account/addNew")
 	public @ResponseBody String addAnotherAccount(ModelMap model, @RequestParam String accountType,
-			@RequestParam float initialDeposit) {
+			@RequestParam float initialDeposit, @RequestParam int userId) {
 
-		User loggedUser = (User) model.getAttribute("user");
+		//User loggedUser = (User) model.getAttribute("user");
 
 		if (bank.accountValidation(accountType)) {
 
-			accountRepo.save(new Account(0, loggedUser.getUserId(), accountType, initialDeposit));
+			bank.addNewAccount(userId, accountType, initialDeposit);
 
 			return "account added";
 		}
