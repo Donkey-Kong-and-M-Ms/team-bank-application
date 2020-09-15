@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -120,6 +121,7 @@ public class BankController {
 	}
 
 	// User will get to add another account
+	@CrossOrigin(origins = "http://localhost:3000")
 	@PostMapping("/account/addNew")
 	public @ResponseBody String addAnotherAccount(ModelMap model, @RequestParam String accountType,
 			@RequestParam float initialDeposit) {
@@ -136,49 +138,53 @@ public class BankController {
 		return "account already exists with this user";
 	}
 
+	@CrossOrigin(origins = "http://localhost:3000")
 	@PostMapping("/deposit")
-	public @ResponseBody String depositSuccess(ModelMap model, @RequestParam float amount,
-			@RequestParam String accountType) {
-
+	public @ResponseBody String depositSuccess( ModelMap model, @RequestParam float amount,
+			@RequestParam String accountType, @RequestParam int userId) {
+		System.out.println(model);
+		System.out.println("test");
 		// create user instance that we can work with
 		User loggedUser = (User) model.getAttribute("user");
 
 		// using the user object to get a user id
-		int userid = loggedUser.getUserId();
+		//int userid = loggedUser.getUserId();
 
-		if (bank.deposit(userid, amount, accountType)) {
+		if (bank.deposit(userId, amount, accountType)) {
 			return SuccessUtil.successDeposit();
 		} else {
 			return ErrorUtil.errorDepositFailed();
 		}
 	}
 
+	@CrossOrigin(origins = "http://localhost:3000")
 	@PostMapping("/withdraw")
 	public @ResponseBody String withdrawSuccess(ModelMap model, @RequestParam float amount,
-			@RequestParam String accountType) {
+			@RequestParam String accountType, @RequestParam int userId) {
 
 		// create user instance that we can work with
 		User loggedUser = (User) model.getAttribute("user");
 
 		// using the user object to get a user id
-		int userid = loggedUser.getUserId();
+		//int userid = loggedUser.getUserId();
 
-		if (bank.withdraw(userid, amount, accountType)) {
+		if (bank.withdraw(userId, amount, accountType)) {
 			return SuccessUtil.successWithdraw();
 		} else {
 			return ErrorUtil.errorWithdrawFailed();
 		}
 	}
 
+	@CrossOrigin(origins = "http://localhost:3000")
 	@PostMapping("/fundTransfer")
 	public @ResponseBody String fundTransferSuccess(ModelMap model, @RequestParam int receiverId,
-			@RequestParam float amount, @RequestParam String userAccountType, @RequestParam String recAccountType) {
+			@RequestParam float amount, @RequestParam String userAccountType, @RequestParam String recAccountType, @RequestParam int userId) {
 
 		// create user instance that we can work with
 		User loggedUser = (User) model.getAttribute("user");
 
 		// using the user object to get a user id
-		int userId = loggedUser.getUserId();
+		//int userId = loggedUser.getUserId();
 
 		if (bank.transfer(userId, receiverId, amount, userAccountType, recAccountType)) {
 			return SuccessUtil.successTransfer();
