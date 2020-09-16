@@ -2,6 +2,7 @@ package com.cognixia.application.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,15 +33,17 @@ public class LoginController {
 		return "index";
 	}
 
+	@CrossOrigin(origins = "http://localhost:3000")
 	@GetMapping("/login")
 	public String showLogin() {
-		return "login";
+		return "Login Failed";
 	}
 	
 	//POST METHODS
 
 	// redirectView used to redirect to the bank controller
 	// redirectAttributes is used to redirect the model to the bank controller
+	@CrossOrigin(origins = "http://localhost:3000")
 	@PostMapping("/login")
 	public @ResponseBody RedirectView loginSuccess(@ModelAttribute ModelMap model, @RequestParam int userId,
 			@RequestParam String userPass, RedirectAttributes red) {
