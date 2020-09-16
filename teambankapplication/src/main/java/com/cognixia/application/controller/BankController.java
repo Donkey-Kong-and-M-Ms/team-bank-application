@@ -177,6 +177,7 @@ public class BankController {
 		//int userid = loggedUser.getUserId();
 
 		if (bank.deposit(userId, amount, accountType)) {
+
 			return SuccessUtil.successDeposit();
 		} else {
 			return ErrorUtil.errorDepositFailed();
@@ -195,6 +196,7 @@ public class BankController {
 		//int userid = loggedUser.getUserId();
 
 		if (bank.withdraw(userId, amount, accountType)) {
+
 			return SuccessUtil.successWithdraw();
 		} else {
 			return ErrorUtil.errorWithdrawFailed();
@@ -212,6 +214,7 @@ public class BankController {
 		// using the user object to get a user id
 		//int userId = loggedUser.getUserId();
 
+		// Attempt to transfer
 		if (bank.transfer(userId, receiverId, amount, userAccountType, recAccountType)) {
 			return SuccessUtil.successTransfer();
 		} else {
