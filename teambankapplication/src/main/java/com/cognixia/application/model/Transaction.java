@@ -7,7 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-@Entity(name = "DBTransaction")
+@Entity(name = "dbtransaction")
 public class Transaction {
 
 	@Id
