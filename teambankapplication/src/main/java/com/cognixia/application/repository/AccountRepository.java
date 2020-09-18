@@ -1,5 +1,6 @@
 package com.cognixia.application.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,4 +13,6 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
 	Optional<Account> findByAccountType(String accountType);
 
 	Optional<Account> findByAccountTypeAndUserUserId(String accountType, int userid);
+	
+	List<Account> findAllByUserUserId(int userId);
 }

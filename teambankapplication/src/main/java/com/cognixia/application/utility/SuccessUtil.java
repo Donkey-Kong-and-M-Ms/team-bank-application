@@ -1,6 +1,9 @@
 package com.cognixia.application.utility;
 
+
+
 public class SuccessUtil {
+	
 	
 	public static String successDeposit() {
 		return "Deposit successful";
@@ -15,7 +18,7 @@ public class SuccessUtil {
 	}
 	
 	public static String successRegister() {
-		return "Account registered";
+		return "Account registered" ;
 	}
 	
 	public static String successLogin() {
