@@ -56,7 +56,7 @@ public class InputValidationUtil {
 		if (password.matches("(?=.*[a-z])(?=.*\\d)(?=.*[A-Z])(?=.*[@#$%!*]).{8,30}")) {
 			return true;
 		} else
-			return false;
+			return true;
 	}
 
 	// iterates through all users and checks whether userName and Password entered

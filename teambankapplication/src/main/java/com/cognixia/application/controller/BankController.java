@@ -11,6 +11,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,6 +25,7 @@ import com.cognixia.application.model.User;
 import com.cognixia.application.model.Transaction;
 import com.cognixia.application.repository.AccountRepository;
 import com.cognixia.application.repository.TransactionRepository;
+import com.cognixia.application.repository.UserRepository;
 import com.cognixia.application.utility.ErrorUtil;
 import com.cognixia.application.utility.SuccessUtil;
 import com.cognixia.application.service.BankService;
@@ -43,6 +45,9 @@ public class BankController {
 	
 	@Autowired
 	private TransactionRepository transactionRepo;
+	
+	@Autowired
+	private UserRepository userRepo;
 	
 
 	@Autowired
@@ -68,6 +73,22 @@ public class BankController {
 
 		// page to display
 		return "mainPage";
+	}
+	
+	@GetMapping("/account/{userId}")
+	public List<Account> findAccountByUserId(@PathVariable int userId){
+		return accountRepo.findAllByUserUserId(userId);
+	}
+	
+	@GetMapping("/user/{userId}")
+	public User findUserByUserId(@PathVariable int userId) {
+		return userRepo.findByUserId(userId);
+	}
+	
+	@GetMapping("/newUserId")
+	public int findNewUserId() {
+		User newUser = userRepo.findLargestUserId();
+		return newUser.getUserId()+1;
 	}
 
 	@GetMapping("/account/add")
