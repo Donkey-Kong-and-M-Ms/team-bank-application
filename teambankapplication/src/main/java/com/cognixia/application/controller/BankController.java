@@ -33,7 +33,7 @@ import com.cognixia.application.dao.AccountDaoImpl;
 import com.cognixia.application.dao.UserDaoImpl;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://dk-bank.herokuapp.com/")
 @RequestMapping(path = "/bank")
 @SessionAttributes("user")
 public class BankController {
@@ -62,7 +62,7 @@ public class BankController {
 
 	// GETTING METHODS
 
-	@CrossOrigin(origins = "http://localhost:3000")
+	@CrossOrigin(origins = "https://dk-bank.herokuapp.com/")
 	@GetMapping("/mainPage")
 	public String showMainPage(ModelMap model, HttpServletRequest request) {
 		Map<String, ?> previousUser = RequestContextUtils.getInputFlashMap(request);

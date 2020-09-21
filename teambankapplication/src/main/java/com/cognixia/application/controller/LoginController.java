@@ -33,7 +33,7 @@ public class LoginController {
 		return "index";
 	}
 
-	@CrossOrigin(origins = "http://localhost:3000")
+	@CrossOrigin(origins = "https://dk-bank.herokuapp.com/")
 	@GetMapping("/login")
 	public String showLogin() {
 		return "Login Failed";
@@ -43,7 +43,7 @@ public class LoginController {
 
 	// redirectView used to redirect to the bank controller
 	// redirectAttributes is used to redirect the model to the bank controller
-	@CrossOrigin(origins = "http://localhost:3000")
+	@CrossOrigin(origins = "https://dk-bank.herokuapp.com/")
 	@PostMapping("/login")
 	public @ResponseBody RedirectView loginSuccess(@ModelAttribute ModelMap model, @RequestParam int userId,
 			@RequestParam String userPass, RedirectAttributes red) {
